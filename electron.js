@@ -63,6 +63,10 @@ try {
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+// Display name everywhere (dock, Windows title bar, etc.) — must be "Stremio +" not "stremio-custom"
+try { app.setName('Stremio +'); } catch {}
+try { app.name = 'Stremio +'; } catch {}
+
 
 // Tracked so the window-control IPC handlers (minimize/maximize/close)
 // below can act on the actual window rather than re-deriving it — with
@@ -246,6 +250,7 @@ function createWindow() {
     width: 1280,
     height: 800,
     backgroundColor: '#000000',
+    title: 'Stremio +',
     show: false,
     icon: windowIcon,
     ...(process.platform === 'darwin'

@@ -59,7 +59,11 @@
         "zip"
       ],
       "artifactName": "Stremio-Plus-${version}-${arch}.${ext}",
-      "icon": "build/icon.icns"
+      "icon": "build/icon.icns",
+      "extendInfo": {
+        "CFBundleDisplayName": "Stremio +",
+        "CFBundleName": "Stremio +"
+      }
     },
     "win": {
       "target": [
