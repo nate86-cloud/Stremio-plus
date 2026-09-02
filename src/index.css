@@ -1,0 +1,528 @@
+@import "tailwindcss";@custom-variant dark (&:where(.dark, .dark *));
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 9999px;
+}
+
+
+@property --bg-base {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f2f2f5;
+}
+
+
+@property --glass-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(255, 255, 255, 0.55);
+}
+
+
+@property --glass-tint-strong {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(255, 255, 255, 0.75);
+}
+
+
+@property --glass-border {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(0, 0, 0, 0.06);
+}
+
+
+@theme {
+  --color-accent: #0A84FF;
+  --color-accent-soft: #64D2FF;
+}
+
+
+:root {
+  --glass-tint: rgba(255, 255, 255, 0.55);
+  --glass-tint-strong: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --glass-highlight: rgba(255, 255, 255, 0.95);
+  --glass-specular: rgba(255, 255, 255, 1);
+  --glass-edge-light: rgba(255, 255, 255, 0.8);
+  --glass-edge-dark: rgba(0, 0, 0, 0.05);
+  --glass-shadow: rgba(0, 0, 0, 0.14);
+  --glass-shadow-contact: rgba(0, 0, 0, 0.1);
+  --glass-refraction: rgba(255, 255, 255, 0.06);
+  --bg-base: #f2f2f5;
+
+
+  /* Spring-like easing approximations. True mass/damping physics needs a
+     JS library (e.g. Framer Motion); these cubic-beziers are the closest
+     CSS-only approximation, with a slight overshoot for organic feel. */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring-soft: cubic-bezier(0.25, 1.1, 0.4, 1);
+}
+
+
+/* Pure OLED black. Dark mode is the native environment for this app —
+   deep true-black rather than the previous dark-gray (#0b0b0e), so glass
+   panels read as material floating over genuine black rather than a
+   slightly-lighter panel over dark gray. */
+.dark {
+  --glass-tint: rgba(24, 24, 27, 0.5);
+  --glass-tint-strong: rgba(28, 28, 32, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.14);
+  --glass-specular: rgba(255, 255, 255, 0.55);
+  --glass-edge-light: rgba(255, 255, 255, 0.16);
+  --glass-edge-dark: rgba(0, 0, 0, 0.6);
+  --glass-shadow: rgba(0, 0, 0, 0.65);
+  --glass-shadow-contact: rgba(0, 0, 0, 0.85);
+  --glass-refraction: rgba(255, 255, 255, 0.035);
+  --bg-base: #000000;
+}
+
+
+@layer utilities {
+  /* Core glass surface. Three-layer depth stack rather than a single
+     blurred sheet:
+       1. base tint + blur+saturation (the "frosted" body)
+       2. ::before  — specular edge ring (existing gradient-border trick)
+       3. ::after   — an inner refraction wash + pointer-tracked specular
+                      hotspot, so the panel reads as thick material with
+                      light passing through it, not a flat frosted layer.
+     The hotspot position is driven by --glare-x/--glare-y, set from JS
+     (see useTilt) on pointermove; it degrades gracefully to a fixed
+     highlight when unset. */
+  .float-layer,
+  .floating-layer {
+    position: relative;
+    z-index: 1;
+    will-change: transform, backdrop-filter;
+    transform: translate3d(0, 0, 0);
+  }
+
+
+  /* Content Layer: the media grid / poster feed plane. Deliberately NOT
+     glass — per the material hierarchy, Liquid Glass is reserved for the
+     Floating Functional Layer only. This is a flat, opaque surface so
+     large scrolling grids of posters never pay for backdrop-filter, and
+     so glass panels floating above (nav, modals, player chrome) always
+     read as a distinct material rather than blending into the grid. */
+  .content-layer {
+    position: relative;
+    background: var(--bg-base);
+    border: none;
+    box-shadow: none;
+  }
+
+
+  .dark .content-layer {
+    background: var(--bg-base);
+  }
+
+
+  .glass-panel,
+  .glass-regular {
+    position: relative;
+    background: var(--glass-tint);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow:
+      0 1px 2px var(--glass-shadow-contact),
+      0 12px 40px var(--glass-shadow),
+      inset 0 1px 0 var(--glass-highlight);
+    transition: background-color 0.5s var(--ease-spring-soft), border-color 0.5s var(--ease-spring-soft),
+      --glass-tint 0.5s var(--ease-spring-soft), --glass-border 0.5s var(--ease-spring-soft),
+      box-shadow 0.4s var(--ease-spring-soft);
+    will-change: transform, backdrop-filter;
+    transform: translate3d(0, 0, 0);
+  }
+
+
+  .glass-clear {
+    position: relative;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 10px 30px -10px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    will-change: transform, backdrop-filter;
+    transform: translate3d(0, 0, 0);
+  }
+
+
+  .glass-clear::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+
+  .glass-clear.dim::after {
+    opacity: 0.35;
+  }
+
+
+  .dark .glass-clear {
+    background: rgba(18, 18, 22, 0.18);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+
+  .glass-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, var(--glass-edge-light) 0%, transparent 30%, transparent 70%, var(--glass-edge-dark) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+
+  .glass-panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at var(--glare-x, 30%) var(--glare-y, 0%), var(--glass-specular) 0%, transparent 45%),
+      linear-gradient(165deg, var(--glass-refraction) 0%, transparent 40%);
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+
+  .glass-capsule {
+    position: relative;
+    background: var(--glass-tint-strong);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow:
+      0 1px 1px var(--glass-shadow-contact),
+      0 6px 20px var(--glass-shadow),
+      inset 0 1px 0 var(--glass-highlight);
+    border-radius: 9999px;
+    transition: background-color 0.5s var(--ease-spring-soft), border-color 0.5s var(--ease-spring-soft),
+      --glass-tint-strong 0.5s var(--ease-spring-soft), --glass-border 0.5s var(--ease-spring-soft),
+      transform 0.4s var(--ease-spring), box-shadow 0.4s var(--ease-spring-soft);
+    will-change: transform, backdrop-filter;
+    transform: translate3d(0, 0, 0);
+  }
+
+
+  .glass-capsule::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, var(--glass-edge-light) 0%, transparent 35%, transparent 65%, var(--glass-edge-dark) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+
+  /* Optional real-refraction variant. Applies the SVG displacement filter
+     defined in index.html. Falls back gracefully to plain blur on engines
+     that don't support combining backdrop-filter with an SVG filter url. */
+  .glass-distort {
+    backdrop-filter: blur(20px) saturate(200%) url(#glass-distortion);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+  }
+
+
+  /* Interactive micro-animation: scale + elevation + specular sheen sweep.
+     Add alongside glass-panel or glass-capsule on clickable elements. */
+  .glass-interactive {
+    cursor: pointer;
+    transition: transform 0.4s var(--ease-spring), box-shadow 0.35s var(--ease-spring-soft);
+    overflow: hidden;
+  }
+
+
+  .glass-interactive::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(115deg, transparent 20%, var(--glass-highlight) 45%, transparent 70%);
+    background-size: 250% 250%;
+    background-position: -60% -60%;
+    opacity: 0;
+    transition: opacity 0.35s ease, background-position 0.7s var(--ease-spring-soft);
+    pointer-events: none;
+  }
+
+
+  .glass-interactive:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 26px var(--glass-shadow), inset 0 1px 0 var(--glass-highlight);
+    z-index: 1;
+    position: relative;
+  }
+
+  .glass-interactive svg,
+  .glass-interactive [class*="lucide"] {
+    pointer-events: none;
+  }
+
+
+  .glass-interactive:hover::after {
+    opacity: 0.5;
+    background-position: 60% 60%;
+  }
+
+
+  .glass-interactive:active {
+    transform: scale(0.965);
+    transition: transform 0.15s var(--ease-spring);
+  }
+
+
+  /* Elevated variant: a visibly thicker slab of glass for modals and the
+     player chrome — extra ambient shadow depth so it clearly floats above
+     .glass-panel surfaces rather than sitting flush with them. */
+  .glass-modal {
+    position: relative;
+    background: var(--glass-tint-strong);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow:
+      0 2px 4px var(--glass-shadow-contact),
+      0 24px 80px var(--glass-shadow),
+      0 4px 24px var(--glass-shadow),
+      inset 0 1px 0 var(--glass-highlight);
+    will-change: transform, backdrop-filter;
+    transform: translate3d(0, 0, 0);
+  }
+
+
+  .glass-modal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, var(--glass-edge-light) 0%, transparent 25%, transparent 75%, var(--glass-edge-dark) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+
+  /* Vibrancy: text and icons directly on a glass surface default to a
+     high-contrast color, so legibility doesn't depend on every component
+     remembering to add text-white / text-neutral-900 by hand. Components
+     can still override with a more specific class — this only sets the
+     baseline. */
+  .glass-panel,
+  .glass-regular,
+  .glass-clear,
+  .glass-capsule,
+  .glass-modal {
+    color: rgba(0, 0, 0, 0.92);
+  }
+
+
+  .dark .glass-panel,
+  .dark .glass-regular,
+  .dark .glass-clear,
+  .dark .glass-capsule,
+  .dark .glass-modal {
+    color: rgba(255, 255, 255, 0.96);
+  }
+}
+
+
+.ambient-glow {
+  position: fixed;
+  border-radius: 9999px;
+  filter: blur(120px);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.4s ease;
+}
+
+
+.ambient-glow-1 {
+  width: 500px;
+  height: 500px;
+  top: -100px;
+  left: -100px;
+  background: var(--color-accent);
+  animation: drift-1 18s ease-in-out infinite alternate;
+}
+
+
+.ambient-glow-2 {
+  width: 600px;
+  height: 600px;
+  bottom: -150px;
+  right: -100px;
+  background: var(--color-accent-soft);
+  animation: drift-2 22s ease-in-out infinite alternate;
+}
+
+
+.dark .ambient-glow {
+  opacity: 0.22;
+}
+
+
+@keyframes drift-1 {
+  from { transform: translate(0, 0); }
+  to { transform: translate(80px, 60px); }
+}
+
+
+@keyframes drift-2 {
+  from { transform: translate(0, 0); }
+  to { transform: translate(-60px, -80px); }
+}
+
+
+/* Spatial 3D liquid-glass depth planes. */
+.spatial-scene {
+  perspective: 1500px;
+  perspective-origin: 50% 40%;
+}
+
+
+.spatial-layer {
+  transform-style: preserve-3d;
+}
+
+
+.depth-wallpaper {
+  transform: translateZ(-150px) scale(1.1);
+}
+
+
+.depth-content {
+  transform: translateZ(0);
+}
+
+
+.depth-header {
+  transform: translateZ(50px);
+}
+
+
+.depth-modal {
+  transform: translateZ(100px);
+}
+
+
+/* Tilt-on-hover 3D depth. Paired with the useTilt hook (src/hooks/useTilt.js)
+   which writes --tilt-x/--tilt-y/--glare-x/--glare-y from real pointer
+   position. Falls back to a flat, inert surface if JS never sets the
+   vars — nothing breaks without the hook. */
+.tilt-element {
+  transform-style: preserve-3d;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+
+.tilt-element:hover {
+  box-shadow: 0 20px 40px var(--glass-shadow);
+}
+
+
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--glare-x, 50%) var(--glare-y, 50%),
+    var(--glass-highlight) 0%,
+    transparent 60%
+  );
+  opacity: 0.35;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .tilt-element {
+    transform: none !important;
+    transition: none !important;
+  }
+
+
+  .glass-interactive:hover {
+    transform: none;
+  }
+
+
+  .ambient-glow-1,
+  .ambient-glow-2 {
+    animation: none;
+  }
+}
+
+/* Isolate video compositor during playback — pause background animations
+   and promote video layer to GPU. Prevents main-thread React updates
+   (progress, stats, subtitles) from thrashing layout while video decodes. */
+.is-playing .ambient-glow,
+.is-playing .ambient-glow-1,
+.is-playing .ambient-glow-2 {
+  animation-play-state: paused !important;
+  opacity: 0.12 !important;
+}
+
+.video-layer-isolated {
+  contain: strict;
+  content-visibility: auto;
+  will-change: transform;
+  transform: translateZ(0);
+  isolation: isolate;
+  backface-visibility: hidden;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes menuIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}

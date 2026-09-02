@@ -1,0 +1,108 @@
+{
+  "name": "stremio-custom",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Stremio+ \u2014 custom desktop build with Supabase cloud sync, Sentry, and auto-updates",
+  "author": {
+    "name": "Stremio Custom",
+    "email": "support@stremio.example.com"
+  },
+  "homepage": "https://github.com/REPLACE_WITH_GITHUB_OWNER/stremio-custom",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/REPLACE_WITH_GITHUB_OWNER/stremio-custom.git"
+  },
+  "type": "module",
+  "main": "electron.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "electron": "electron .",
+    "electron:dev": "vite --host 127.0.0.1 & electron .",
+    "dist": "vite build && electron-builder",
+    "dist:win": "vite build && electron-builder --win",
+    "dist:mac": "vite build && electron-builder --mac",
+    "dist:linux": "vite build && electron-builder --linux"
+  },
+  "build": {
+    "appId": "com.stremio.custom",
+    "productName": "Stremio Plus",
+    "artifactName": "Stremio-Plus-${version}-${arch}.${ext}",
+    "asar": true,
+    "asarUnpack": [
+      "stremio-server/**"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**",
+      "electron.js",
+      "preload.cjs",
+      "public/**",
+      "stremio-server/**",
+      "package.json"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "nate86-cloud",
+        "repo": "nate86-cloud"
+      }
+    ],
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "artifactName": "Stremio-Plus-${version}-${arch}.${ext}"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ],
+      "artifactName": "Stremio-Plus-Setup-${version}.${ext}"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "artifactName": "Stremio-Plus-${version}.${ext}",
+      "category": "AudioVideo"
+    },
+    "nsis": {
+      "artifactName": "Stremio-Plus-Setup-${version}.${ext}"
+    }
+  },
+  "dependencies": {
+    "@sentry/electron": "^7.18.0",
+    "@sentry/react": "^10.73.0",
+    "@supabase/supabase-js": "^2.45.4",
+    "@tailwindcss/vite": "^4.3.3",
+    "dotenv": "^17.4.2",
+    "electron-log": "^5.4.4",
+    "electron-updater": "^6.8.9",
+    "hls.js": "^1.7.1",
+    "lucide-react": "^1.31.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "electron": "^43.4.0",
+    "electron-builder": "^26.15.3",
+    "eslint": "^10.8.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "globals": "^17.7.0",
+    "vite": "^8.2.0",
+    "vite-plugin-javascript-obfuscator": "^3.1.0"
+  }
+}
