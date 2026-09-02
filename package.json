@@ -1,7 +1,7 @@
 {
   "name": "stremio-custom",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Stremio+ — custom desktop build with Supabase cloud sync, Sentry, and auto-updates",
   "author": {
     "name": "Stremio Custom",
