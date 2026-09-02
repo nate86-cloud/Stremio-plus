@@ -6,21 +6,6 @@ Custom desktop build of Stremio (Electron + Vite + React). Bundles the local str
 - Node 20+, npm 10+
 - `npm install`
 
-## Run in development
-```bash
-npm run dev        # Vite at http://localhost:5173
-npm run electron   # open the app (dev loads http://localhost:5173, falls back to dist/index.html)
-# or both:
-npm run electron:dev
-```
-
-## Build
-```bash
-npm run build      # obfuscated Vite bundle, sourcemaps OFF, .asar-ready (dist/)
-npm run lint       # eslint (must be 0 errors)
-npm run preview    # preview dist in browser
-```
-
 ## Packaging (electron-builder → `release/`)
 `package.json:build` → `asar: true` (with `stremio-server/**` unpacked), sourcemaps disabled, JS obfuscated. `version: 1.0.0`.
 
