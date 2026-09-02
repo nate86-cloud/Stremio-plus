@@ -1,16 +1,16 @@
 {
   "name": "stremio-custom",
   "private": true,
-  "version": "1.0.0",
-  "description": "Stremio+ \u2014 custom desktop build with Supabase cloud sync, Sentry, and auto-updates",
+  "version": "1.0.1",
+  "description": "Stremio+ — custom desktop build with Supabase cloud sync, Sentry, and auto-updates",
   "author": {
     "name": "Stremio Custom",
     "email": "support@stremio.example.com"
   },
-  "homepage": "https://github.com/REPLACE_WITH_GITHUB_OWNER/stremio-custom",
+  "homepage": "https://github.com/nate86-cloud/nate86-cloud",
   "repository": {
     "type": "git",
-    "url": "https://github.com/REPLACE_WITH_GITHUB_OWNER/stremio-custom.git"
+    "url": "https://github.com/nate86-cloud/nate86-cloud.git"
   },
   "type": "module",
   "main": "electron.js",
@@ -35,7 +35,8 @@
       "stremio-server/**"
     ],
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "build"
     },
     "files": [
       "dist/**",
@@ -57,20 +58,23 @@
         "dmg",
         "zip"
       ],
-      "artifactName": "Stremio-Plus-${version}-${arch}.${ext}"
+      "artifactName": "Stremio-Plus-${version}-${arch}.${ext}",
+      "icon": "build/icon.icns"
     },
     "win": {
       "target": [
         "nsis",
         "zip"
       ],
-      "artifactName": "Stremio-Plus-Setup-${version}.${ext}"
+      "artifactName": "Stremio-Plus-Setup-${version}.${ext}",
+      "icon": "build/icon.ico"
     },
     "linux": {
       "target": [
         "AppImage"
       ],
       "artifactName": "Stremio-Plus-${version}.${ext}",
+      "icon": "build/icon.png",
       "category": "AudioVideo"
     },
     "nsis": {
@@ -102,6 +106,8 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.7.0",
+    "png-to-ico": "^3.0.2",
+    "sharp": "^0.35.4",
     "vite": "^8.2.0",
     "vite-plugin-javascript-obfuscator": "^3.1.0"
   }
