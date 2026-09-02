@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { Home, Compass, Bookmark, Settings, Sun, Moon, X, SearchX, Dices } from 'lucide-react'
+import { Home, Compass, Bookmark, Settings, Sun, Moon, X, SearchX, Dices, Info } from 'lucide-react'
 import BackToTop from './components/BackToTop'
 import ControlBar from './components/ControlBar'
 import HeroBanner from './components/HeroBanner'
@@ -27,6 +27,7 @@ import Titlebar from './components/Titlebar'
 import CatalogExpandedView from './components/CatalogExpandedView'
 import DiscoverView from './components/DiscoverView'
 import UpdaterBanner from './components/UpdaterBanner'
+import LandingPage from './components/LandingPage'
 
 
 
@@ -705,6 +706,7 @@ function App() {
         <NavIcon icon={Home} active={activeView === 'home'} onClick={() => handleGoHome({ setActiveView, setExpandedCatalog, mainRef, setSelectedMovie })} />
         <NavIcon icon={Compass} active={activeView === 'discover'} onClick={() => { setActiveView('discover'); setExpandedCatalog(null); try { mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' }) } catch {} }} />
         <NavIcon icon={Bookmark} active={activeView === 'library'} onClick={() => setActiveView('library')} />
+        <NavIcon icon={Info} active={activeView === 'landing'} onClick={() => { setActiveView('landing'); setExpandedCatalog(null); try { mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' }) } catch {} }} />
         <button
           onClick={handlePlaySomething}
           disabled={watchlistItems.length === 0 && trendingMovies.length === 0}
@@ -754,7 +756,7 @@ function App() {
         }`}
         style={{ overscrollBehavior: 'contain' }}
       >
-        {(activeView !== 'settings' && activeView !== 'addons' && activeView !== 'discover') && (
+        {(activeView !== 'settings' && activeView !== 'addons' && activeView !== 'discover' && activeView !== 'landing') && (
           <div className="depth-header mb-3 flex items-center gap-4">
             <div className="flex-1">
               <ControlBar
@@ -1002,6 +1004,10 @@ function App() {
             onToggleHoverAutoplay={() => setHoverAutoplayEnabled(!hoverAutoplayEnabled)}
             onPreferencesChange={handlePreferencesChange}
           />
+        )}
+
+        {activeView === 'landing' && (
+          <LandingPage onEnterApp={() => { setActiveView('home'); try { mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' }) } catch {} }} />
         )}
       </main>
       </div>
