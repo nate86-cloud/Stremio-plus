@@ -14,8 +14,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - os: macos-13
+            args: --mac --x64
           - os: macos-latest
-            args: --mac
+            args: --mac --arm64
           - os: ubuntu-latest
             args: --linux
           - os: windows-latest
