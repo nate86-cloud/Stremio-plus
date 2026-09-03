@@ -19,13 +19,23 @@ release
 !.env.example
 
 
-# Editor directories and files
+# Editor / tooling - never public
 .vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
+.cursor/
+.devin/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Lovable / TanStack build outputs (landing page)
+.output
+.wrangler/
+.vinxi
+.tanstack
+.nitro
+.dev.vars
