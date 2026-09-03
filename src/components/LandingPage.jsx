@@ -68,6 +68,7 @@ export default function LandingPage({ onEnterApp }) {
             <a href="#features" className="px-3 py-1.5 rounded-full text-xs font-medium hover:bg-black/5 dark:hover:bg-white/10" style={{ color: 'var(--muted, #6E6E73)' }}>Features</a>
             <a href="#download" className="px-3 py-1.5 rounded-full text-xs font-medium hover:bg-black/5 dark:hover:bg-white/10" style={{ color: 'var(--muted, #6E6E73)' }}>Download</a>
             <a href="#gatekeeper" className="px-3 py-1.5 rounded-full text-xs font-medium hover:bg-black/5 dark:hover:bg-white/10" style={{ color: 'var(--muted, #6E6E73)' }}>Gatekeeper</a>
+            <button onClick={() => setShowReadme(true)} className="px-3 py-1.5 rounded-full text-xs font-medium hover:bg-black/5 dark:hover:bg-white/10" style={{ color: 'var(--muted, #6E6E73)', background: 'transparent', border: 'none', cursor: 'pointer' }}>About</button>
           </nav>
         </div>
 
@@ -103,7 +104,7 @@ export default function LandingPage({ onEnterApp }) {
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Now available for macOS, Windows, Linux
             </div>
             <h1 className="mt-5 text-[46px] sm:text-[58px] font-bold tracking-[-0.04em] leading-[0.9]" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-              Watch anything.<br /><span style={{ color: 'var(--accent, #6D4DF6)' }}>Together.</span>
+              stremio +
             </h1>
             <p className="mt-4 text-[18px] leading-relaxed max-w-[560px]" style={{ color: 'var(--muted, #6E6E73)' }}>
               A native desktop experience for movies, series and live TV — built for focus, speed and shared watching.
@@ -185,24 +186,7 @@ export default function LandingPage({ onEnterApp }) {
         </div>
       </div>
 
-      <div className="mt-4 flex justify-center">
-        <button
-          onClick={() => setShowReadme(v => !v)}
-          className="px-4 py-2 rounded-full text-xs font-medium"
-          style={{ background: 'var(--glass)', border: '1px solid var(--border)', backdropFilter: 'blur(12px)' }}
-        >
-          About this update {showReadme ? '— Hide' : '→'}
-        </button>
-      </div>
-      {showReadme && (
-        <div className="mt-4 rounded-[22px] p-6 sm:p-7" style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
-          <h3 className="text-sm font-bold" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>About this update</h3>
-          <p className="text-sm leading-relaxed mt-2" style={{ color: 'var(--muted)' }}>
-            Stremio + 1.0.0 is a full redesign — liquid glass, higher refraction and less frost so content stays crisp.
-            Profiles make sharing effortless, live is faster and more stable, light mode is now first-class, and achievements turn watching into a gentle game — complete with profile rings that unlock as you level up.
-          </p>
-        </div>
-      )}
+
 
       {/* DOWNLOADS — two pills per row, copy outside at opposite side */}
       <div id="download" className="mt-6 rounded-[28px] p-6 sm:p-8" style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
@@ -292,9 +276,24 @@ export default function LandingPage({ onEnterApp }) {
       </div>
 
       <footer className="text-center text-[11px] mt-6" style={{ color: 'var(--muted-2)' }}>
-        <div>Need help? <a href="mailto:stremioplus.help@gmail.com" style={{ color: 'var(--muted)', textDecoration: 'underline', textUnderlineOffset: 3 }}>stremioplus.help@gmail.com</a></div>
-        <div style={{ marginTop: 6, opacity: 0.6 }}>© 2025 Stremio + • Built for people who love to watch</div>
+        <div>Need help? <a href="mailto:stremioplus.help@gmail.com" style={{ color: 'var(--muted)', textDecoration: 'underline', textUnderlineOffset: 3 }}>stremioplus.help@gmail.com</a> • <button onClick={() => setShowReadme(true)} style={{ background: 'none', border: 'none', color: 'var(--muted)', textDecoration: 'underline', cursor: 'pointer', fontSize: '11px' }}>About</button></div>
+        <div style={{ marginTop: 6, opacity: 0.6 }}>© 2026 Stremio +</div>
       </footer>
+
+      {showReadme && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.32)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }} onClick={() => setShowReadme(false)}>
+          <div className="max-w-[640px] w-full rounded-[24px] p-7" style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)', boxShadow: '0 24px 64px rgba(0,0,0,0.12)' }} onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <h3 style={{ fontFamily: 'Space Grotesk, sans-serif', margin: 0 }}>About this update</h3>
+              <button onClick={() => setShowReadme(false)} style={{ width: 32, height: 32, borderRadius: '50%', display: 'grid', placeItems: 'center', background: 'var(--glass)', border: '1px solid var(--border)', cursor: 'pointer' }}>✕</button>
+            </div>
+            <p style={{ color: 'var(--muted)', fontSize: 14, lineHeight: 1.6, marginTop: 14 }}>
+              Stremio + 1.0.0 is a full redesign — liquid glass, higher refraction and less frost so content stays crisp.
+              Profiles make sharing effortless, live is faster and more stable, light mode is now first-class, and achievements turn watching into a gentle game — complete with profile rings that unlock as you level up.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

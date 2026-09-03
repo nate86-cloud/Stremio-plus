@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stremio + — Watch anything. Together.</title>
-<meta name="description" content="Stremio + is a beautifully crafted desktop app for movies, series and live TV — with profiles, live streaming, light mode and achievements that unlock as you watch." />
+<meta name="description" content="Stremio + is a beautifully crafted desktop app for movies, series and live TV — with profiles, live streaming, light mode and achievements that unlock as you watch. Download for macOS, Windows and Linux." />
 <meta property="og:title" content="Stremio + — Watch anything. Together." />
 <meta property="og:description" content="New UI, profiles, live streaming, light mode and gamified achievements. Download for macOS, Windows and Linux." />
 <meta property="og:image" content="./icon.png" />
@@ -21,12 +21,12 @@
     --text:#1D1D1F;
     --muted:#6E6E73;
     --muted-2:#86868B;
-    --border:rgba(0,0,0,0.07);
-    --border-strong:rgba(0,0,0,0.10);
-    --glass:rgba(255,255,255,0.58);
-    --glass-strong:rgba(255,255,255,0.82);
-    --shadow:0 8px 32px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
-    --shadow-lg:0 24px 64px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+    --border:rgba(0,0,0,0.06);
+    --border-strong:rgba(0,0,0,0.09);
+    --glass:rgba(255,255,255,0.42);
+    --glass-strong:rgba(255,255,255,0.68);
+    --shadow:0 8px 28px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-lg:0 20px 56px rgba(0,0,0,0.08), 0 4px 14px rgba(0,0,0,0.05);
   }
   @media (prefers-color-scheme: dark){
     :root{
@@ -35,24 +35,24 @@
       --text:#F5F5F7;
       --muted:rgba(255,255,255,0.60);
       --muted-2:rgba(255,255,255,0.42);
-      --border:rgba(255,255,255,0.08);
-      --border-strong:rgba(255,255,255,0.12);
+      --border:rgba(255,255,255,0.07);
+      --border-strong:rgba(255,255,255,0.11);
       --glass:rgba(255,255,255,0.04);
       --glass-strong:rgba(255,255,255,0.07);
     }
   }
-  html[data-theme="light"]{ --bg:#F5F5F7; --bg-soft:#FFF; --text:#1D1D1F; --muted:#6E6E73; --muted-2:#86868B; --border:rgba(0,0,0,0.07); --glass:rgba(255,255,255,0.58); --glass-strong:rgba(255,255,255,0.82); }
-  html[data-theme="dark"]{ --bg:#0B0B0F; --bg-soft:#14141A; --text:#F5F5F7; --muted:rgba(255,255,255,0.60); --muted-2:rgba(255,255,255,0.42); --border:rgba(255,255,255,0.08); --glass:rgba(255,255,255,0.04); --glass-strong:rgba(255,255,255,0.07); }
+  html[data-theme="light"]{ --bg:#F5F5F7; --bg-soft:#FFF; --text:#1D1D1F; --muted:#6E6E73; --muted-2:#86868B; --border:rgba(0,0,0,0.06); --glass:rgba(255,255,255,0.42); --glass-strong:rgba(255,255,255,0.68); }
+  html[data-theme="dark"]{ --bg:#0B0B0F; --bg-soft:#14141A; --text:#F5F5F7; --muted:rgba(255,255,255,0.60); --muted-2:rgba(255,255,255,0.42); --border:rgba(255,255,255,0.07); --glass:rgba(255,255,255,0.04); --glass-strong:rgba(255,255,255,0.07); }
   *{box-sizing:border-box;min-width:0}
   html{scroll-behavior:smooth;overflow-x:hidden}
   body{margin:0;overflow-x:hidden;font-family:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
   a{color:var(--accent);text-decoration:none}
   .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
-  .nav-wrap{position:sticky;top:14px;z-index:30;display:flex;gap:12px;align-items:center;justify-content:space-between;max-width:1120px;margin:14px auto 0;padding:0 24px}
-  .pill{display:flex;align-items:center;gap:14px;background:var(--glass);backdrop-filter:blur(16px) saturate(160%) brightness(1.04);-webkit-backdrop-filter:blur(16px) saturate(160%) brightness(1.04);border:1px solid var(--border);border-radius:999px;box-shadow:var(--shadow);position:relative;overflow:hidden}
-  .pill::before{content:"";position:absolute;inset:0;border-radius:999px;background:linear-gradient(180deg, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0) 62%);opacity:0.55;pointer-events:none}
-  @media (prefers-color-scheme: dark){ .pill::before{opacity:0.10} }
-  html[data-theme="dark"] .pill::before{opacity:0.10} html[data-theme="light"] .pill::before{opacity:0.55}
+  .nav-wrap{position:sticky;top:12px;z-index:30;display:flex;gap:12px;align-items:center;justify-content:space-between;max-width:1120px;margin:14px auto 0;padding:0 24px}
+  .pill{display:flex;align-items:center;gap:14px;background:var(--glass);backdrop-filter:blur(14px) saturate(160%) brightness(1.05);-webkit-backdrop-filter:blur(14px) saturate(160%) brightness(1.05);border:1px solid var(--border);border-radius:999px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .pill::before{content:"";position:absolute;inset:0;border-radius:999px;background:linear-gradient(180deg, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0) 62%);opacity:0.62;pointer-events:none}
+  @media (prefers-color-scheme: dark){ .pill::before{opacity:0.08} }
+  html[data-theme="dark"] .pill::before{opacity:0.08} html[data-theme="light"] .pill::before{opacity:0.62}
   .pill-left{padding:8px 10px 8px 12px}
   .pill-right{padding:8px 8px 8px 14px}
   .brand{display:flex;align-items:center;gap:10px;font-family:Space Grotesk,sans-serif;font-weight:700;letter-spacing:-0.02em}
@@ -67,10 +67,10 @@
   @media (prefers-color-scheme: dark){ .btn-primary{background:#fff;color:#000} }
   html[data-theme="dark"] .btn-primary{background:#fff;color:#000} html[data-theme="light"] .btn-primary{background:#1D1D1F;color:#fff}
   .btn-ghost{background:transparent;border-color:var(--border);color:var(--text)}
-  .icon-btn{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(12px);cursor:pointer}
-  .hero{margin-top:22px;position:relative;overflow:hidden;background:var(--glass);backdrop-filter:blur(20px) saturate(165%) brightness(1.02);-webkit-backdrop-filter:blur(20px) saturate(165%) brightness(1.02);border:1px solid var(--border);border-radius:36px;box-shadow:var(--shadow-lg)}
-  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 400px at 14% 8%, rgba(109,77,246,0.05), transparent 60%), linear-gradient(180deg, rgba(255,255,255,0.58), transparent 42%);opacity:0.6;pointer-events:none}
-  @media (prefers-color-scheme: dark){ .hero::before{background:radial-gradient(600px 400px at 14% 8%, rgba(109,77,246,0.07), transparent 60%), linear-gradient(180deg, rgba(255,255,255,0.04), transparent 44%)} }
+  .icon-btn{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(10px);cursor:pointer}
+  .hero{margin-top:22px;position:relative;overflow:hidden;background:var(--glass);backdrop-filter:blur(18px) saturate(165%) brightness(1.03);-webkit-backdrop-filter:blur(18px) saturate(165%) brightness(1.03);border:1px solid var(--border);border-radius:36px;box-shadow:var(--shadow-lg)}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 400px at 14% 8%, rgba(109,77,246,0.04), transparent 60%), linear-gradient(180deg, rgba(255,255,255,0.62), transparent 42%);opacity:0.7;pointer-events:none}
+  @media (prefers-color-scheme: dark){ .hero::before{background:radial-gradient(600px 400px at 14% 8%, rgba(109,77,246,0.06), transparent 60%), linear-gradient(180deg, rgba(255,255,255,0.04), transparent 44%)} }
   .hero-grid{display:grid;grid-template-columns:1.08fr 0.92fr;gap:0;position:relative}
   @media (max-width:900px){ .hero-grid{grid-template-columns:1fr} }
   .hero-left{padding:48px 44px 44px}
@@ -94,7 +94,7 @@
   .section-title{margin:40px 0 14px;font-family:Space Grotesk,sans-serif;font-size:26px;letter-spacing:-0.02em}
   .bento{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
   .card{grid-column:span 12;background:var(--bg-soft);border:1px solid var(--border);border-radius:22px;padding:24px;box-shadow:var(--shadow);position:relative;overflow:hidden}
-  .card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.50), transparent 36%);opacity:0.14;pointer-events:none}
+  .card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.42), transparent 36%);opacity:0.10;pointer-events:none}
   @media (prefers-color-scheme: dark){ .card::before{opacity:0.03} }
   @media(min-width:700px){ .span7{grid-column:span 7} .span5{grid-column:span 5} .span6{grid-column:span 6} .span4{grid-column:span 4} }
   .card h3{margin:14px 0 6px;font-family:Space Grotesk,sans-serif;font-size:16px}
@@ -108,7 +108,7 @@
   .dl-title{font-weight:700;font-size:14px}
   .dl-sub{font-size:12px;color:var(--muted);margin-top:2px}
   .pill-cmd{margin-top:12px;display:flex;align-items:center;gap:10px}
-  .pill-cmd code{flex:1;min-width:0;display:block;padding:11px 14px;border-radius:999px;background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(12px);font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pill-cmd code{flex:1;min-width:0;display:block;padding:11px 14px;border-radius:999px;background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(10px);font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .copy-pill{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;padding:10px 14px;border-radius:999px;background:var(--text);color:var(--bg-soft);border:1px solid var(--text);font-size:12px;font-weight:600;cursor:pointer}
   @media (prefers-color-scheme: dark){ .copy-pill{background:#fff;color:#000;border-color:#fff} }
   html[data-theme="dark"] .copy-pill{background:#fff;color:#000} html[data-theme="light"] .copy-pill{background:#1D1D1F;color:#fff}
@@ -120,6 +120,12 @@
   .faq-q{width:100%;text-align:left;background:transparent;border:0;color:var(--text);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:14px;font-weight:500}
   .faq-a{padding:0 24px 16px;display:none}
   .faq-item.open .faq-a{display:block}
+  /* About popup */
+  .about-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.32);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:24px;z-index:50}
+  .about-overlay.open{display:flex}
+  .about-card{max-width:640px;width:100%;background:var(--bg-soft);border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow-lg);padding:28px;position:relative;overflow:hidden}
+  .about-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.45), transparent 40%);opacity:0.12;pointer-events:none}
+  @media (prefers-color-scheme: dark){ .about-card::before{opacity:0.04} }
   footer{max-width:1120px;margin:36px auto 0;padding:0 24px 32px;text-align:center;color:var(--muted-2);font-size:12px}
   footer a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
   html,body{max-width:100%;overflow-x:hidden} img{max-width:100%}
@@ -137,6 +143,7 @@
         <a href="#features">Features</a>
         <a href="#download">Download</a>
         <a href="#gatekeeper">Gatekeeper</a>
+        <a href="#" id="aboutLink" style="font-size:13px;font-weight:500;color:var(--muted);padding:6px 10px;border-radius:999px;text-decoration:none">About</a>
       </nav>
     </div>
     <div class="pill pill-right">
@@ -151,11 +158,11 @@
       <div class="hero-grid">
         <div style="padding:48px 44px 44px">
           <div class="eyebrow"><span class="dot"></span> Now available for macOS, Windows, Linux</div>
-          <h1>Watch anything.<br><span style="color:var(--accent)">Together.</span></h1>
+          <h1>stremio +</h1>
           <p class="lead">A native desktop experience for movies, series and live TV — built for focus, speed and shared watching.</p>
           <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:26px">
             <a href="#download" class="btn btn-primary">Download for your OS →</a>
-            <a href="https://github.com/nate86-cloud/nate86-cloud" class="btn" style="background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(12px);">View on GitHub</a>
+            <a href="https://github.com/nate86-cloud/nate86-cloud" class="btn" style="background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(10px);">View on GitHub</a>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
             <span class="chip ok">✓ Intel Mac</span>
@@ -168,7 +175,7 @@
           <div class="mock">
             <div class="mock-bar"><span class="dot-r" style="background:#ff5f57"></span><span class="dot-r" style="background:#ffbd2e"></span><span class="dot-r" style="background:#28c940"></span><span style="margin-left:10px;font-size:11px;opacity:0.5;font-weight:500">Stremio +</span><span style="margin-left:auto;font-size:10px;padding:4px 8px;border-radius:999px;background:rgba(109,77,246,0.12);border:1px solid rgba(109,77,246,0.14);color:#7C3AED">v1.0.0</span></div>
             <div style="padding:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-              <div style="grid-column:span 3;height:96px;border-radius:12px;background:linear-gradient(135deg, rgba(109,77,246,0.14), rgba(56,189,248,0.08));border:1px solid var(--border);display:flex;align-items:flex-end;padding:10px;"><div><div style="font-size:11px;font-weight:600;color:#fff">Continue Watching</div><div style="font-size:10px;opacity:0.55;color:#fff">Your progress, everywhere</div></div></div>
+              <div style="grid-column:span 3;height:96px;border-radius:12px;background:linear-gradient(135deg, rgba(109,77,246,0.10), rgba(56,189,248,0.06));border:1px solid var(--border);display:flex;align-items:flex-end;padding:10px;"><div><div style="font-size:11px;font-weight:600;color:#fff">Continue Watching</div><div style="font-size:10px;opacity:0.55;color:#fff">Your progress, everywhere</div></div></div>
               <div style="height:64px;border-radius:10px;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;opacity:0.4">🎬</div>
               <div style="height:64px;border-radius:10px;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;opacity:0.4">🎬</div>
               <div style="height:64px;border-radius:10px;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;opacity:0.4">🎬</div>
@@ -185,45 +192,35 @@
     <h2 id="features" class="section-title" style="font-family:Space Grotesk,sans-serif;font-size:26px;letter-spacing:-0.02em;margin:40px 0 14px">What’s new in Stremio +</h2>
     <div class="bento">
       <div class="card span7">
-        <div style="width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(109,77,246,0.08);border:1px solid rgba(109,77,246,0.12)">✨</div>
+        <div style="width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(109,77,246,0.07);border:1px solid rgba(109,77,246,0.11)">✨</div>
         <h3>A new interface, rebuilt</h3>
         <p>Liquid glass with high refraction and barely-there frost. Bigger type, clearer hierarchy, and motion that feels at home on macOS and Windows.</p>
       </div>
       <div class="card span5">
-        <div style="width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.12)">👥</div>
+        <div style="width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(56,189,248,0.07);border:1px solid rgba(56,189,248,0.11)">👥</div>
         <h3>Profiles for everyone</h3>
         <p>Up to 4 profiles per device. Each with their own watchlist, progress and recommendations.</p>
       </div>
       <div class="card span6">
-        <div style="width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.12)">📺</div>
+        <div style="width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.11)">📺</div>
         <h3>Live, finally done right</h3>
         <p>Smoother live streaming with lower latency, better buffering and instant channel switching.</p>
       </div>
       <div class="card span6">
-        <div style="width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.12)">🌗</div>
+        <div style="width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.11)">🌗</div>
         <h3>Light mode, crafted</h3>
         <p>Not just inverted colors. Every surface and shadow was tuned for light — bright, calm, still Stremio.</p>
       </div>
       <div class="card span6">
-        <div style="width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.12)">🏆</div>
+        <div style="width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(236,72,153,0.07);border:1px solid rgba(236,72,153,0.11)">🏆</div>
         <h3>Gamified achievements</h3>
         <p>Watch, collect and unlock — streaks, marathons and badges that celebrate how you watch.</p>
       </div>
       <div class="card span6">
-        <div style="width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(109,77,246,0.08);border:1px solid rgba(109,77,246,0.12)">⭕</div>
+        <div style="width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(109,77,246,0.07);border:1px solid rgba(109,77,246,0.11)">⭕</div>
         <h3>Profile rings, unlocked</h3>
         <p>Your ring evolves with you. Bronze to Diamond — level up and show it off.</p>
       </div>
-    </div>
-    <div style="margin-top:16px;display:flex;gap:12px;justify-content:center">
-      <button id="aboutBtn" class="btn" style="background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(12px);">About this update →</button>
-    </div>
-    <div id="aboutPanel" style="display:none;margin-top:16px" class="panel">
-      <h3 style="margin:0;font-family:Space Grotesk,sans-serif">About this update</h3>
-      <p style="color:var(--muted);font-size:14px;line-height:1.6;margin:10px 0 0">
-        Stremio + 1.0.0 is a full redesign — liquid glass, higher refraction and less frost so content stays crisp.
-        Profiles make sharing effortless, live is faster and more stable, light mode is now first-class, and achievements turn watching into a gentle game — complete with profile rings that unlock as you level up.
-      </p>
     </div>
 
     <div id="download" class="panel">
@@ -232,7 +229,7 @@
           <h2 style="margin:0;font-family:Space Grotesk,sans-serif;display:flex;align-items:center;gap:8px;font-size:20px">Download v1.0.0</h2>
           <p style="margin:6px 0 0;color:var(--muted);font-size:13px">Choose your system. Copy, paste, run.</p>
         </div>
-        <span style="padding:6px 10px;border-radius:999px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.12);color:#0d7a5f;font-size:12px;display:inline-flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:#10B981"></span> Live on GitHub</span>
+        <span style="padding:6px 10px;border-radius:999px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.11);color:#0d7a5f;font-size:12px;display:inline-flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:#10B981"></span> Live on GitHub</span>
       </div>
       <div class="dl-grid">
         <div class="dl" id="dl-mac">
@@ -297,9 +294,24 @@
 
     <footer>
       <div>Need help? <a href="mailto:stremioplus.help@gmail.com">stremioplus.help@gmail.com</a></div>
-      <div style="margin-top:6px;opacity:0.6">© 2025 Stremio + • Built for people who love to watch</div>
+      <div style="margin-top:6px;opacity:0.6">© 2026 Stremio +</div>
     </footer>
   </div>
+
+  <!-- About popup -->
+  <div id="aboutOverlay" class="about-overlay" onclick="if(event.target===this) this.classList.remove('open')">
+    <div class="about-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <h3 style="margin:0;font-family:Space Grotesk,sans-serif">About this update</h3>
+        <button onclick="document.getElementById('aboutOverlay').classList.remove('open')" style="width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--glass);border:1px solid var(--border);cursor:pointer">✕</button>
+      </div>
+      <p style="color:var(--muted);font-size:14px;line-height:1.6;margin:14px 0 0">
+        Stremio + 1.0.0 is a full redesign — liquid glass, higher refraction and less frost so content stays crisp.
+        Profiles make sharing effortless, live is faster and more stable, light mode is now first-class, and achievements turn watching into a gentle game — complete with profile rings that unlock as you level up.
+      </p>
+    </div>
+  </div>
+
   <script>
     function copyCmd(id, btn){
       const el = document.getElementById(id);
@@ -316,11 +328,11 @@
       if(ua.includes('mac')) os='mac';
       else if(ua.includes('win')) os='win';
       const el = document.getElementById('dl-'+os);
-      if(el){ el.style.borderColor='rgba(109,77,246,0.28)'; el.style.boxShadow='0 8px 24px rgba(109,77,246,0.12)'; }
+      if(el){ el.style.borderColor='rgba(109,77,246,0.22)'; el.style.boxShadow='0 8px 24px rgba(109,77,246,0.10)'; }
     })();
-    document.getElementById('aboutBtn')?.addEventListener('click', ()=>{
-      const p = document.getElementById('aboutPanel');
-      p.style.display = p.style.display === 'none' ? 'block' : 'none';
+    document.getElementById('aboutLink')?.addEventListener('click', (e)=>{
+      e.preventDefault();
+      document.getElementById('aboutOverlay').classList.add('open');
     });
     (function(){
       const key='stremio-theme';
