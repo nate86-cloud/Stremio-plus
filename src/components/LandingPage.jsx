@@ -1,11 +1,8 @@
 import { useState, useMemo } from 'react'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
 import {
-  Download, Shield, Zap, Cloud, Monitor, ExternalLink, ArrowRight, Code2,
-  Play, Star, Users, HardDrive, Lock, Cpu, Film, Sparkle, ChevronDown, Check
+  Download, Shield, Monitor, ExternalLink, ArrowRight, Code2,
+  Play, Film, ChevronDown, Check, Sun, Moon
 } from 'lucide-react'
-import readmeRaw from '../../README.md?raw'
 
 const GITHUB_URL = 'https://github.com/nate86-cloud/nate86-cloud'
 const RELEASE_URL = `${GITHUB_URL}/releases/tag/v1.0.0`
@@ -22,211 +19,266 @@ function usePlatform() {
 export default function LandingPage({ onEnterApp }) {
   const [showReadme, setShowReadme] = useState(false)
   const [openFaq, setOpenFaq] = useState(null)
+  const [theme, setTheme] = useState(() => {
+    if (typeof document !== 'undefined') return document.documentElement.getAttribute('data-theme') || 'auto'
+    return 'auto'
+  })
   const platform = usePlatform()
 
-  return (
-    <div className="min-h-full pb-12 -m-1">
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap');`}</style>
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : theme === 'light' ? 'auto' : 'dark'
+    setTheme(next)
+    if (next === 'auto') document.documentElement.removeAttribute('data-theme')
+    else document.documentElement.setAttribute('data-theme', next)
+    try { localStorage.setItem('stremio-theme', next) } catch {}
+  }
 
-      {/* NAV */}
-      <div className="sticky top-0 z-20 -mx-6 -mt-4 px-6 py-3 flex items-center justify-between backdrop-blur-2xl bg-[var(--bg-base)]/70 border-b border-black/5 dark:border-white/5">
-        <div className="flex items-center gap-3">
-          <img src="/icon.png" alt="" className="w-8 h-8 rounded-xl shadow-md" />
-          <span className="text-sm font-bold tracking-tight" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Stremio <span className="text-accent">+</span></span>
-          <span className="hidden sm:inline-flex ml-2 px-2.5 py-1 rounded-full bg-accent/10 border border-accent/15 text-[11px] font-medium text-accent">v1.0.0</span>
+  const copy = async (id, e) => {
+    const btn = e?.currentTarget
+    const el = document.getElementById(id)
+    if (!el) return
+    await navigator.clipboard.writeText(el.innerText)
+    if (btn) {
+      const old = btn.innerHTML
+      btn.innerHTML = 'Copied!'
+      setTimeout(() => (btn.innerHTML = old), 1200)
+    }
+  }
+
+  return (
+    <div className="min-h-full pb-12 -m-1" style={{ overflowX: 'hidden' }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap'); html,body{max-width:100%;overflow-x:hidden}`}</style>
+
+      {/* NAV — two pills */}
+      <div className="sticky top-0 z-20 flex gap-3 items-center justify-between max-w-[1120px] mx-auto px-0 py-3" style={{ backdropFilter: 'blur(0px)' }}>
+        <div className="flex items-center gap-3 px-3 py-2 rounded-full"
+          style={{
+            background: 'var(--glass, rgba(255,255,255,0.62))',
+            backdropFilter: 'blur(18px) saturate(160%) brightness(1.04)',
+            WebkitBackdropFilter: 'blur(18px) saturate(160%) brightness(1.04)',
+            border: '1px solid var(--border, rgba(0,0,0,0.07))',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.06)',
+            position: 'relative', overflow: 'hidden'
+          }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(255,255,255,0.72), transparent 58%)', opacity: 0.45, pointerEvents: 'none', borderRadius: 999 }} />
+          <img src="/icon.png" alt="" className="w-7 h-7 rounded-lg relative" />
+          <span className="text-sm font-bold relative" style={{ fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '-0.02em' }}>Stremio <span className="text-accent">+</span></span>
+          <span className="hidden sm:inline-flex ml-1 px-2 py-1 rounded-full text-[11px] font-medium border relative" style={{ background: 'rgba(109,77,246,0.10)', borderColor: 'rgba(109,77,246,0.14)', color: '#6D4DF6' }}>v1.0.0</span>
+          <nav className="hidden md:flex gap-1 ml-2 relative">
+            <a href="#features" className="px-3 py-1.5 rounded-full text-xs font-medium hover:bg-black/5 dark:hover:bg-white/10" style={{ color: 'var(--muted, #6E6E73)' }}>Features</a>
+            <a href="#download" className="px-3 py-1.5 rounded-full text-xs font-medium hover:bg-black/5 dark:hover:bg-white/10" style={{ color: 'var(--muted, #6E6E73)' }}>Download</a>
+            <a href="#gatekeeper" className="px-3 py-1.5 rounded-full text-xs font-medium hover:bg-black/5 dark:hover:bg-white/10" style={{ color: 'var(--muted, #6E6E73)' }}>Gatekeeper</a>
+          </nav>
         </div>
-        <div className="flex items-center gap-2">
-          <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-black/5 dark:bg-white/10 text-xs font-medium hover:bg-black/10 transition-colors">
+
+        <div className="flex items-center gap-2 px-2 py-1.5 rounded-full"
+          style={{
+            background: 'var(--glass, rgba(255,255,255,0.62))',
+            backdropFilter: 'blur(18px) saturate(160%) brightness(1.04)',
+            WebkitBackdropFilter: 'blur(18px) saturate(160%) brightness(1.04)',
+            border: '1px solid var(--border, rgba(0,0,0,0.07))',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.06)',
+            position: 'relative', overflow: 'hidden'
+          }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(255,255,255,0.72), transparent 58%)', opacity: 0.45, pointerEvents: 'none', borderRadius: 999 }} />
+          <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-black/5 dark:hover:bg-white/10 relative" style={{ color: 'var(--muted, #6E6E73)' }}>
             <Code2 className="w-3.5 h-3.5" /> GitHub
           </a>
-          <button onClick={onEnterApp} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-accent text-white text-xs font-semibold shadow-md shadow-accent/20 hover:bg-accent/90 transition-colors">
-            Launch App <ArrowRight className="w-3.5 h-3.5" />
+          <a href={RELEASE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold text-white relative" style={{ background: 'var(--text, #1D1D1F)', boxShadow: '0 4px 16px rgba(0,0,0,0.12)' }}>
+            Download
+          </a>
+          <button onClick={toggleTheme} className="w-8 h-8 rounded-full grid place-items-center border relative" style={{ background: 'var(--glass)', borderColor: 'var(--border)' }} aria-label="Toggle theme">
+            {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : theme === 'light' ? <Moon className="w-3.5 h-3.5" /> : <span className="text-xs">◐</span>}
           </button>
         </div>
       </div>
 
-      {/* HERO */}
-      <div className="relative mt-6 rounded-[2.8rem] overflow-hidden glass-panel p-0">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-32 -right-32 w-[520px] h-[520px] rounded-full blur-[90px] opacity-30" style={{ background: 'radial-gradient(circle at 30% 30%, #8B5CF6, transparent 60%)' }} />
-          <div className="absolute -bottom-40 -left-40 w-[560px] h-[560px] rounded-full blur-[100px] opacity-20" style={{ background: 'radial-gradient(circle at 70% 70%, #38BDF8, transparent 60%)' }} />
-          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
-        </div>
-
-        <div className="relative grid lg:grid-cols-[1.05fr_0.95fr] gap-0">
+      {/* HERO — bigger type, reduced gradients, minimal */}
+      <div className="relative mt-4 rounded-[2.8rem] overflow-hidden p-0" style={{ background: 'var(--glass)', backdropFilter: 'blur(22px) saturate(165%) brightness(1.02)', WebkitBackdropFilter: 'blur(22px) saturate(165%) brightness(1.02)', border: '1px solid var(--border)', boxShadow: '0 24px 64px rgba(0,0,0,0.08)' }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(600px 400px at 14% 8%, rgba(109,77,246,0.06), transparent 60%)', opacity: 0.6 }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.45), transparent 38%)', opacity: 0.18 }} />
+        <div className="relative grid lg:grid-cols-[1.08fr_0.92fr] gap-0">
           <div className="p-8 sm:p-10 lg:p-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 dark:bg-white/10 border border-white/10 backdrop-blur text-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="font-medium">All platforms • Auto-updates • Custom icon</span>
-              <span className="hidden sm:inline-flex ml-1 px-1.5 py-0.5 rounded-full bg-accent text-white text-[10px] font-bold">NEW</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs" style={{ background: 'var(--bg-soft, #fff)', border: '1px solid var(--border)', backdropFilter: 'blur(12px)' }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Now available for macOS, Windows, Linux
             </div>
-
-            <h1 className="mt-5 text-[42px] sm:text-[56px] font-bold tracking-[-0.03em] leading-[0.9]" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-              <span className="text-neutral-900 dark:text-white">Stremio</span>
-              <span className="text-accent"> +</span>
-              <span className="block text-[18px] sm:text-[22px] font-medium tracking-normal text-neutral-500 dark:text-white/50 mt-2" style={{ fontFamily: 'Inter, sans-serif' }}>
-                Black glass. Plus sign. No Electron default.
-              </span>
+            <h1 className="mt-5 text-[46px] sm:text-[58px] font-bold tracking-[-0.04em] leading-[0.9]" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+              Watch anything.<br /><span style={{ color: 'var(--accent, #6D4DF6)' }}>Together.</span>
             </h1>
-
-            <p className="mt-5 text-[15px] leading-relaxed text-neutral-600 dark:text-white/65 max-w-[560px]" style={{ fontFamily: 'Inter, sans-serif' }}>
-              The Stremio you love — now as a hardened desktop app. Bundled <span className="font-mono text-xs px-1.5 py-1 rounded bg-black/5 dark:bg-white/10">127.0.0.1:11470</span> server,
-              Supabase sync, Sentry and <span className="font-medium text-neutral-900 dark:text-white">Stremio +</span> everywhere — Dock, Windows title bar, and installer.
+            <p className="mt-4 text-[18px] leading-relaxed max-w-[560px]" style={{ color: 'var(--muted, #6E6E73)' }}>
+              A native desktop experience for movies, series and live TV — built for focus, speed and shared watching.
             </p>
-
             <div className="mt-7 flex flex-wrap gap-3">
-              <button onClick={onEnterApp} className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-accent text-white text-sm font-semibold shadow-xl shadow-accent/25 hover:shadow-accent/30 hover:bg-accent/90 transition-all hover:-translate-y-[1px]">
-                <Play className="w-4 h-4 fill-white" /> Open Stremio +
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              <button onClick={onEnterApp} className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-white text-sm font-semibold shadow-xl hover:shadow-2xl transition-all hover:-translate-y-[1px]" style={{ background: 'var(--text, #1D1D1F)', boxShadow: '0 8px 24px rgba(0,0,0,0.12)' }}>
+                <Play className="w-4 h-4 fill-white" /> Open Stremio + <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </button>
-              <a href={RELEASE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white dark:bg-white text-neutral-900 text-sm font-semibold shadow-md hover:shadow-lg transition-all">
+              <a href={RELEASE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-sm font-semibold" style={{ background: 'var(--glass)', border: '1px solid var(--border)', backdropFilter: 'blur(12px)' }}>
                 <Download className="w-4 h-4" /> Download
               </a>
-              <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-5 py-3.5 rounded-full bg-black/5 dark:bg-white/10 border border-black/5 dark:border-white/10 backdrop-blur text-sm font-medium hover:bg-black/10 dark:hover:bg-white/15 transition-colors">
-                View Source
-              </a>
             </div>
-
-            <div className="mt-7 flex items-center gap-6 text-xs">
-              <span className="inline-flex items-center gap-1.5"><Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" /> 1.0.0</span>
-              <span className="inline-flex items-center gap-1.5 opacity-60"><Users className="w-3.5 h-3.5" /> Open source</span>
-              <span className="inline-flex items-center gap-1.5 opacity-60"><Shield className="w-3.5 h-3.5" /> Gatekeeper docs</span>
-            </div>
-
-            <div className="mt-6 flex flex-wrap gap-2 text-[11px]">
-              <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border border-emerald-500/15">✓ Intel Mac</span>
-              <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border border-emerald-500/15">✓ Apple Silicon</span>
-              <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border border-emerald-500/15">✓ AppImage</span>
-              <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border border-emerald-500/15">✓ Windows exe</span>
+            <div className="mt-6 flex flex-wrap gap-2">
+              <span className="px-2.5 py-1 rounded-full text-xs flex items-center gap-1.5" style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.14)', color: '#0d7a5f' }}>✓ Intel Mac</span>
+              <span className="px-2.5 py-1 rounded-full text-xs flex items-center gap-1.5" style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.14)', color: '#0d7a5f' }}>✓ Apple Silicon</span>
+              <span className="px-2.5 py-1 rounded-full text-xs flex items-center gap-1.5" style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.14)', color: '#0d7a5f' }}>✓ AppImage</span>
+              <span className="px-2.5 py-1 rounded-full text-xs flex items-center gap-1.5" style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.14)', color: '#0d7a5f' }}>✓ Windows exe</span>
             </div>
           </div>
 
-          {/* Mock window */}
-          <div className="relative p-6 sm:p-8 lg:p-10 flex items-center">
-            <div className="relative w-full max-w-[520px] mx-auto rounded-[1.6rem] overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.45),0_12px_24px_rgba(0,0,0,0.25)] border border-white/10 bg-[#0a0a0f]">
-              <div className="h-9 flex items-center gap-1.5 px-4 bg-white/[0.04] border-b border-white/5">
-                <span className="w-3 h-3 rounded-full bg-red-500/80" /><span className="w-3 h-3 rounded-full bg-yellow-500/80" /><span className="w-3 h-3 rounded-full bg-green-500/80" />
-                <span className="ml-3 text-[11px] font-medium tracking-wide opacity-60">Stremio +</span>
-                <span className="ml-auto text-[10px] px-2 py-1 rounded-full bg-accent/15 text-accent border border-accent/20">v1.0.0</span>
+          <div className="relative p-6 sm:p-8 lg:p-10 flex items-center" style={{ background: 'rgba(0,0,0,0.015)' }}>
+            <div className="relative w-full max-w-[520px] mx-auto rounded-[1.6rem] overflow-hidden shadow-[0_24px_64px_rgba(0,0,0,0.12)] border" style={{ background: '#0A0A0F', borderColor: 'rgba(255,255,255,0.08)' }}>
+              <div className="h-9 flex items-center gap-1.5 px-4" style={{ background: 'rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                <span className="w-3 h-3 rounded-full" style={{ background: '#ff5f57' }} /><span className="w-3 h-3 rounded-full" style={{ background: '#ffbd2e' }} /><span className="w-3 h-3 rounded-full" style={{ background: '#28c940' }} />
+                <span className="ml-3 text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>Stremio +</span>
+                <span className="ml-auto text-[10px] px-2 py-1 rounded-full" style={{ background: 'rgba(109,77,246,0.12)', border: '1px solid rgba(109,77,246,0.18)', color: '#a78bfa' }}>v1.0.0</span>
               </div>
               <div className="p-4 grid grid-cols-3 gap-3">
-                <div className="col-span-3 h-28 rounded-xl bg-gradient-to-br from-violet-600/30 to-blue-500/20 border border-white/5 flex items-end p-3">
-                  <div>
-                    <p className="text-xs font-semibold text-white">Continue Watching</p>
-                    <p className="text-[11px] text-white/60">Bundled server • 127.0.0.1:11470</p>
-                  </div>
+                <div className="col-span-3 h-24 rounded-xl border flex items-end p-3" style={{ background: 'linear-gradient(135deg, rgba(109,77,246,0.14), rgba(56,189,248,0.08))', borderColor: 'rgba(255,255,255,0.06)' }}>
+                  <div><p className="text-xs font-semibold text-white">Continue Watching</p><p className="text-[11px] text-white/50">Your progress, everywhere</p></div>
                 </div>
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="h-20 rounded-xl bg-white/[0.06] border border-white/5 flex items-center justify-center">
-                    <Film className="w-5 h-5 opacity-30" />
+                  <div key={i} className="h-20 rounded-xl border flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.06)' }}>
+                    <Film className="w-5 h-5" style={{ opacity: 0.3, color: '#fff' }} />
                   </div>
                 ))}
               </div>
               <div className="px-4 pb-4 flex gap-2">
-                <span className="flex-1 h-8 rounded-full bg-white/5 border border-white/5 flex items-center px-3 text-[11px] opacity-50">Search…</span>
-                <span className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white"><Play className="w-3.5 h-3.5 fill-white" /></span>
-              </div>
-              <div className="absolute -bottom-6 -right-6 w-28 h-28 rounded-[1.4rem] overflow-hidden shadow-xl border border-white/10 hidden sm:block">
-                <img src="/icon.png" alt="" className="w-full h-full object-cover" />
+                <span className="flex-1 h-8 rounded-full border flex items-center px-3 text-[11px]" style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.4)' }}>Search movies, series…</span>
+                <span className="w-8 h-8 rounded-full grid place-items-center text-white" style={{ background: 'var(--accent, #6D4DF6)' }}><Play className="w-3.5 h-3.5 fill-white" /></span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* BENTO FEATURES */}
-      <div className="mt-6 grid grid-cols-12 gap-4">
-        <div className="col-span-12 lg:col-span-7 glass-panel rounded-[1.8rem] p-6 sm:p-7 flex flex-col">
-          <div className="w-10 h-10 rounded-xl bg-violet-500/15 border border-violet-500/20 flex items-center justify-center text-violet-400"><Zap className="w-5 h-5" /></div>
-          <h3 className="mt-4 text-base font-semibold" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Zero-config streaming</h3>
-          <p className="text-sm text-neutral-500 dark:text-white/55 mt-1 leading-relaxed">Bundled <span className="font-mono text-xs">stremio-server/server.js</span> auto-starts. No separate download, no port juggling — just open and play. Falls back to external service if needed.</p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <span className="px-2.5 py-1 rounded-full bg-black/5 dark:bg-white/10 text-xs flex items-center gap-1.5"><HardDrive className="w-3 h-3" /> 127.0.0.1:11470</span>
-            <span className="px-2.5 py-1 rounded-full bg-black/5 dark:bg-white/10 text-xs flex items-center gap-1.5"><Cpu className="w-3 h-3" /> launcher.cjs</span>
-          </div>
+      {/* BENTO — new UI improvements, minimal, Apple-like */}
+      <h2 id="features" className="mt-10 mb-4 text-[22px] font-bold tracking-[-0.02em]" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>What’s new in Stremio +</h2>
+      <div className="grid grid-cols-12 gap-4">
+        <div className="col-span-12 lg:col-span-7 rounded-[22px] p-6 sm:p-7" style={{ background: 'var(--bg-soft, #fff)', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
+          <div className="w-10 h-10 rounded-xl grid place-items-center" style={{ background: 'rgba(109,77,246,0.08)', border: '1px solid rgba(109,77,246,0.12)', color: '#6D4DF6' }}>✨</div>
+          <h3 className="mt-4 text-[16px] font-semibold" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>A new interface, rebuilt</h3>
+          <p className="text-[14px] leading-relaxed mt-1" style={{ color: 'var(--muted)' }}>Liquid glass with high refraction and barely-there frost. Bigger type, clearer hierarchy, and motion that feels at home on macOS and Windows.</p>
         </div>
-        <div className="col-span-12 lg:col-span-5 glass-panel rounded-[1.8rem] p-6 sm:p-7">
-          <div className="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/20 flex items-center justify-center text-blue-400"><Cloud className="w-5 h-5" /></div>
-          <h3 className="mt-4 text-base font-semibold" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Supabase sync</h3>
-          <p className="text-sm text-neutral-500 dark:text-white/55 mt-1">Profiles, watch progress, and settings follow you — RLS per <span className="font-mono text-xs">auth.uid()</span>.</p>
+        <div className="col-span-12 lg:col-span-5 rounded-[22px] p-6 sm:p-7" style={{ background: 'var(--bg-soft, #fff)', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
+          <div className="w-10 h-10 rounded-xl grid place-items-center" style={{ background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.12)' }}>👥</div>
+          <h3 className="mt-4 text-[16px] font-semibold" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Profiles for everyone</h3>
+          <p className="text-[14px] leading-relaxed mt-1" style={{ color: 'var(--muted)' }}>Up to 4 profiles per device. Each with their own watchlist, progress and recommendations.</p>
         </div>
-
-        <div className="col-span-12 sm:col-span-6 lg:col-span-4 glass-panel rounded-[1.8rem] p-6">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center text-emerald-400"><Lock className="w-5 h-5" /></div>
-          <h3 className="mt-3 text-sm font-semibold">Hardened Electron</h3>
-          <p className="text-xs text-neutral-500 dark:text-white/55 mt-1 leading-relaxed">contextIsolation • sandbox • CSP • safe IPC via contextBridge. No raw Node in renderer.</p>
+        <div className="col-span-12 sm:col-span-6 lg:col-span-6 rounded-[22px] p-6" style={{ background: 'var(--bg-soft, #fff)', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
+          <div className="w-10 h-10 rounded-xl grid place-items-center" style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.12)' }}>📺</div>
+          <h3 className="mt-3 text-sm font-semibold">Live, finally done right</h3>
+          <p className="text-xs leading-relaxed mt-1" style={{ color: 'var(--muted)' }}>Smoother live streaming with lower latency, better buffering and instant channel switching.</p>
         </div>
-        <div className="col-span-12 sm:col-span-6 lg:col-span-4 glass-panel rounded-[1.8rem] p-6">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/20 flex items-center justify-center text-amber-400"><Shield className="w-5 h-5" /></div>
-          <h3 className="mt-3 text-sm font-semibold">Secure by default</h3>
-          <p className="text-xs text-neutral-500 dark:text-white/55 mt-1">External nav blocked, <span className="font-mono text-xs">file://</span> allow-list, permission handler denies camera/mic.</p>
+        <div className="col-span-12 sm:col-span-6 lg:col-span-6 rounded-[22px] p-6" style={{ background: 'var(--bg-soft, #fff)', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
+          <div className="w-10 h-10 rounded-xl grid place-items-center" style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.12)' }}>🌗</div>
+          <h3 className="mt-3 text-sm font-semibold">Light mode, crafted</h3>
+          <p className="text-xs leading-relaxed mt-1" style={{ color: 'var(--muted)' }}>Not just inverted colors. Every surface and shadow was tuned for light — bright, calm, still Stremio.</p>
         </div>
-        <div className="col-span-12 lg:col-span-4 glass-panel rounded-[1.8rem] p-6 flex flex-col justify-between">
-          <div>
-            <div className="w-10 h-10 rounded-xl bg-pink-500/15 border border-pink-500/20 flex items-center justify-center text-pink-400"><Sparkle className="w-5 h-5" /></div>
-            <h3 className="mt-3 text-sm font-semibold">Polished</h3>
-            <p className="text-xs text-neutral-500 dark:text-white/55 mt-1">Asar, obfuscated, no sourcemaps. Dock shows <b>Stremio +</b>, not Electron.</p>
-          </div>
-          <div className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-accent">Stremio + everywhere <ArrowRight className="w-3 h-3" /></div>
+        <div className="col-span-12 sm:col-span-6 rounded-[22px] p-6" style={{ background: 'var(--bg-soft, #fff)', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
+          <div className="w-10 h-10 rounded-xl grid place-items-center" style={{ background: 'rgba(236,72,153,0.08)', border: '1px solid rgba(236,72,153,0.12)' }}>🏆</div>
+          <h3 className="mt-3 text-sm font-semibold">Achievements that matter</h3>
+          <p className="text-xs leading-relaxed mt-1" style={{ color: 'var(--muted)' }}>Watch, collect and unlock — streaks, marathons and badges that celebrate how you watch.</p>
+        </div>
+        <div className="col-span-12 sm:col-span-6 rounded-[22px] p-6" style={{ background: 'var(--bg-soft, #fff)', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
+          <div className="w-10 h-10 rounded-xl grid place-items-center" style={{ background: 'rgba(109,77,246,0.08)', border: '1px solid rgba(109,77,246,0.12)' }}>⭕</div>
+          <h3 className="mt-3 text-sm font-semibold">Profile rings, unlocked</h3>
+          <p className="text-xs leading-relaxed mt-1" style={{ color: 'var(--muted)' }}>Your ring evolves with you. Bronze to Diamond — level up and show it off.</p>
         </div>
       </div>
 
-      {/* DOWNLOADS — OS aware highlight */}
-      <div className="mt-6 glass-panel rounded-[1.8rem] p-6 sm:p-8">
+      <div className="mt-4 flex justify-center">
+        <button
+          onClick={() => setShowReadme(v => !v)}
+          className="px-4 py-2 rounded-full text-xs font-medium"
+          style={{ background: 'var(--glass)', border: '1px solid var(--border)', backdropFilter: 'blur(12px)' }}
+        >
+          About this update {showReadme ? '— Hide' : '→'}
+        </button>
+      </div>
+      {showReadme && (
+        <div className="mt-4 rounded-[22px] p-6 sm:p-7" style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
+          <h3 className="text-sm font-bold" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>About this update</h3>
+          <p className="text-sm leading-relaxed mt-2" style={{ color: 'var(--muted)' }}>
+            Stremio + 1.0.0 is a full redesign — liquid glass, higher refraction and less frost so content stays crisp.
+            Profiles make sharing effortless, live is faster and more stable, light mode is now first-class, and achievements turn watching into a gentle game — complete with profile rings that unlock as you level up.
+          </p>
+        </div>
+      )}
+
+      {/* DOWNLOADS — two pills per row, copy outside at opposite side */}
+      <div id="download" className="mt-6 rounded-[28px] p-6 sm:p-8" style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h2 className="text-lg font-bold flex items-center gap-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}><Download className="w-4 h-4" /> Download v1.0.0</h2>
-            <p className="text-xs text-neutral-500 dark:text-white/50 mt-1">All 3 OS installers carry the new Stremio + icon. Auto-updates via GitHub Releases.</p>
+            <h2 className="text-[20px] font-bold flex items-center gap-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}><Download className="w-4 h-4" /> Download v1.0.0</h2>
+            <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>Choose your system. Copy, paste, run.</p>
           </div>
-          <span className="px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-600 dark:text-emerald-300 flex items-center gap-1.5">
+          <span className="px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5" style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.14)', color: '#0d7a5f' }}>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live on GitHub
           </span>
         </div>
 
-        <div className="mt-6 grid sm:grid-cols-3 gap-4">
+        <div className="mt-6 grid sm:grid-cols-1 gap-4">
           {[
-            { os: 'mac', label: 'macOS', files: 'Stremio-Plus-1.0.0-x64.dmg (Intel) + arm64', icon: Monitor },
-            { os: 'linux', label: 'Linux', files: 'Stremio-Plus-1.0.0.AppImage', icon: Monitor },
-            { os: 'win', label: 'Windows', files: 'Stremio-Plus-Setup-1.0.0.exe', icon: Monitor },
-          ].map(({ os, label, files, icon: Icon }) => {
+            { os: 'mac', label: 'macOS', sub: 'Stremio-Plus-1.0.0-x64.dmg (Intel) + arm64', id: 'cmd-mac', cmd: 'curl -L -o Stremio-Plus-1.0.0-x64.dmg https://github.com/nate86-cloud/nate86-cloud/releases/download/v1.0.0/Stremio-Plus-1.0.0-x64.dmg' },
+            { os: 'linux', label: 'Linux', sub: 'Stremio-Plus-1.0.0.AppImage', id: 'cmd-linux', cmd: 'curl -L -o Stremio-Plus-1.0.0.AppImage https://github.com/nate86-cloud/nate86-cloud/releases/download/v1.0.0/Stremio-Plus-1.0.0.AppImage && chmod +x Stremio-Plus-1.0.0.AppImage' },
+            { os: 'win', label: 'Windows', sub: 'Stremio-Plus-Setup-1.0.0.exe', id: 'cmd-win', cmd: 'Invoke-WebRequest -Uri https://github.com/nate86-cloud/nate86-cloud/releases/download/v1.0.0/Stremio-Plus-Setup-1.0.0.exe -OutFile Stremio-Plus-Setup-1.0.0.exe' },
+          ].map(({ label, sub, id, cmd, os }) => {
             const active = platform === os
             return (
-              <a key={os} href={RELEASE_URL} target="_blank" rel="noreferrer" className={`group relative overflow-hidden rounded-2xl p-5 border transition-all hover:-translate-y-0.5 ${active ? 'bg-accent text-white border-accent shadow-lg shadow-accent/20' : 'glass-clear hover:bg-accent/5 hover:border-accent/15'}`}>
-                {active && <span className="absolute top-3 right-3 text-[10px] font-bold px-2 py-1 rounded-full bg-white text-accent">Your OS</span>}
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${active ? 'bg-white text-accent' : 'bg-black/5 dark:bg-white/10 border border-black/5 dark:border-white/10'}`}>
-                  <Icon className="w-4 h-4" />
+              <div key={label} className="rounded-[18px] p-5" style={{ background: active ? 'var(--accent)' : 'var(--bg-soft)', border: `1px solid ${active ? 'var(--accent)' : 'var(--border)'}`, color: active ? '#fff' : 'var(--text)', boxShadow: active ? '0 8px 24px rgba(109,77,246,0.18)' : 'none' }}>
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl grid place-items-center shrink-0" style={{ background: active ? '#fff' : 'var(--glass)', border: `1px solid ${active ? '#fff' : 'var(--border)'}`, color: active ? 'var(--accent)' : 'var(--text)' }}>
+                      <Monitor className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold" style={{ color: active ? '#fff' : 'var(--text)' }}>{label}</p>
+                      <p className="text-[11px]" style={{ color: active ? 'rgba(255,255,255,0.8)' : 'var(--muted)' }}>{sub}</p>
+                    </div>
+                  </div>
+                  <a href={RELEASE_URL} target="_blank" rel="noreferrer" className="hidden sm:inline-flex items-center gap-1 text-xs font-medium shrink-0" style={{ color: active ? '#fff' : 'var(--accent)' }}>
+                    Releases <ExternalLink className="w-3 h-3" />
+                  </a>
                 </div>
-                <p className={`mt-3 text-sm font-semibold ${active ? 'text-white' : ''}`}>{label}</p>
-                <p className={`text-[11px] mt-1 ${active ? 'text-white/80' : 'text-neutral-500 dark:text-white/50'}`}>{files}</p>
-                <span className={`inline-flex items-center gap-1 text-xs mt-3 font-medium ${active ? 'text-white' : 'text-accent'} group-hover:gap-1.5 transition-all`}>GitHub Releases <ExternalLink className="w-3 h-3" /></span>
-              </a>
+
+                <div className="mt-4 flex items-center gap-3">
+                  <code id={id} className="flex-1 min-w-0 block px-4 py-3 rounded-full text-[11px] leading-relaxed truncate" style={{ background: active ? 'rgba(255,255,255,0.14)' : 'var(--glass)', border: `1px solid ${active ? 'rgba(255,255,255,0.18)' : 'var(--border)'}`, backdropFilter: 'blur(12px)', color: active ? '#fff' : 'var(--text)', fontFamily: 'ui-monospace, Menlo, monospace' }}>
+                    {cmd}
+                  </code>
+                  <button onClick={(e) => copy(id, e)} className="shrink-0 inline-flex items-center gap-1.5 px-4 py-3 rounded-full text-xs font-semibold" style={{ background: active ? '#fff' : 'var(--text)', color: active ? 'var(--accent)' : 'var(--bg-soft)', border: `1px solid ${active ? '#fff' : 'var(--text)'}` }}>
+                    <span>⎘</span> Copy
+                  </button>
+                </div>
+              </div>
             )
           })}
         </div>
       </div>
 
-      {/* GATEKEEPER FAQ */}
-      <div className="mt-6 glass-panel rounded-[1.8rem] overflow-hidden">
-        <div className="px-6 sm:px-8 py-5 border-b border-black/5 dark:border-white/5 flex items-center justify-between">
-          <h3 className="text-sm font-bold flex items-center gap-2"><Shield className="w-4 h-4" /> Bypass Gatekeeper (unsigned)</h3>
-          <span className="text-[11px] px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-500/15">First launch only</span>
+      {/* GATEKEEPER */}
+      <div id="gatekeeper" className="mt-6 rounded-[22px] overflow-hidden" style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
+        <div className="px-6 sm:px-8 py-5 border-b flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
+          <h3 className="text-sm font-bold flex items-center gap-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}><Shield className="w-4 h-4" /> Gatekeeper — first launch only</h3>
+          <span className="text-[11px] px-2.5 py-1 rounded-full hidden sm:inline-flex" style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.12)', color: '#b45309' }}>Unsigned</span>
         </div>
         {[
-          { os: 'macOS', cmd: 'xattr -cr "/Applications/Stremio Plus.app"', desc: 'Right-click → Open → Open (whitelists). Or System Settings → Privacy & Security → Open Anyway.' },
-          { os: 'Linux', cmd: 'chmod +x "Stremio-Plus-1.0.0.AppImage" && ./"Stremio-Plus-1.0.0.AppImage"', desc: 'Use --no-sandbox if root/container. Ubuntu 22.04: sudo apt install libfuse2.' },
-          { os: 'Windows', cmd: 'Stremio-Plus-Setup-1.0.0.exe', desc: 'SmartScreen → More info → Run anyway. Portable zip: extract → Stremio Plus.exe.' },
+          { os: 'macOS', cmd: 'xattr -cr "/Applications/Stremio Plus.app" && open "/Applications/Stremio Plus.app"', desc: 'Or right-click → Open → Open, or System Settings → Privacy & Security → Open Anyway.' },
+          { os: 'Linux', cmd: 'chmod +x "Stremio-Plus-1.0.0.AppImage" && ./"Stremio-Plus-1.0.0.AppImage"', desc: null },
+          { os: 'Windows', cmd: '.\\Stremio-Plus-Setup-1.0.0.exe', desc: 'SmartScreen → More info → Run anyway.' },
         ].map(({ os, cmd, desc }) => {
-          const isOpen = openFaq === os
+          const id = `gate-${os}`
           return (
-            <div key={os} className="border-b last:border-0 border-black/5 dark:border-white/5">
-              <button onClick={() => setOpenFaq(isOpen ? null : os)} className="w-full flex items-center justify-between px-6 sm:px-8 py-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.03] transition-colors text-left">
+            <div key={os} className="border-b last:border-0" style={{ borderColor: 'var(--border)' }}>
+              <button onClick={() => setOpenFaq(openFaq === os ? null : os)} className="w-full flex items-center justify-between px-6 sm:px-8 py-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.03] transition-colors text-left">
                 <span className="text-sm font-medium">{os}</span>
-                <ChevronDown className={`w-4 h-4 opacity-50 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-4 h-4 transition-transform ${openFaq === os ? 'rotate-180' : ''}`} style={{ opacity: 0.5 }} />
               </button>
-              {isOpen && (
+              {openFaq === os && (
                 <div className="px-6 sm:px-8 pb-5">
-                  <pre className="px-4 py-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 text-xs overflow-auto"><code>{cmd}</code></pre>
-                  <p className="text-xs text-neutral-500 dark:text-white/50 mt-2">{desc}</p>
+                  <div className="flex items-center gap-3">
+                    <code id={id} className="flex-1 min-w-0 block px-4 py-3 rounded-full text-[11px] truncate" style={{ background: 'var(--glass)', border: '1px solid var(--border)', fontFamily: 'ui-monospace, monospace' }}>{cmd}</code>
+                    <button onClick={(e) => copy(id, e)} className="shrink-0 px-4 py-3 rounded-full text-xs font-semibold" style={{ background: 'var(--text)', color: 'var(--bg-soft)' }}>Copy</button>
+                  </div>
+                  {desc && <p className="text-xs mt-2" style={{ color: 'var(--muted)' }}>{desc}</p>}
                 </div>
               )}
             </div>
@@ -234,30 +286,15 @@ export default function LandingPage({ onEnterApp }) {
         })}
       </div>
 
-      {/* README */}
-      <div className="mt-6 glass-panel rounded-[1.8rem] overflow-hidden">
-        <button onClick={() => setShowReadme(v => !v)} className="w-full flex items-center justify-between px-6 sm:px-8 py-5 hover:bg-black/[0.02] dark:hover:bg-white/[0.03] transition-colors">
-          <span className="text-sm font-semibold flex items-center gap-2"><Code2 className="w-4 h-4" /> Full README on GitHub</span>
-          <span className="text-xs px-3 py-1 rounded-full bg-black/5 dark:bg-white/10 flex items-center gap-1">{showReadme ? 'Hide' : 'Show'} <ChevronDown className={`w-3 h-3 transition-transform ${showReadme ? 'rotate-180' : ''}`} /></span>
-        </button>
-        {showReadme && (
-          <div className="px-6 sm:px-8 pb-8 pt-2 border-t border-black/5 dark:border-white/5">
-            <article className="prose prose-sm dark:prose-invert max-w-none prose-pre:bg-black/5 dark:prose-pre:bg-white/5 prose-pre:border prose-pre:border-black/5 dark:prose-pre:border-white/5 prose-code:text-xs prose-a:text-accent">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{readmeRaw}</ReactMarkdown>
-            </article>
-          </div>
-        )}
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-2 text-xs">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full" style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)' }}><Check className="w-3 h-3" style={{ color: '#10B981' }} /> asar + obfuscated</span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full" style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)' }}><Check className="w-3 h-3" style={{ color: '#10B981' }} /> Stremio + everywhere</span>
       </div>
 
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-clear"><Check className="w-3 h-3 text-emerald-500" /> asar + obfuscated</span>
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-clear"><Check className="w-3 h-3 text-emerald-500" /> Sentry + updater</span>
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-clear"><Check className="w-3 h-3 text-emerald-500" /> Stremio + everywhere</span>
-      </div>
-
-      <p className="text-center text-[11px] text-neutral-400 dark:text-white/30 mt-6">
-        Stremio + • <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="underline hover:text-accent">nate86-cloud/nate86-cloud</a> • v1.0.0 • In-app via Info → Landing
-      </p>
+      <footer className="text-center text-[11px] mt-6" style={{ color: 'var(--muted-2)' }}>
+        <div>Need help? <a href="mailto:stremioplus.help@gmail.com" style={{ color: 'var(--muted)', textDecoration: 'underline', textUnderlineOffset: 3 }}>stremioplus.help@gmail.com</a></div>
+        <div style={{ marginTop: 6, opacity: 0.6 }}>© 2025 Stremio + • Built for people who love to watch</div>
+      </footer>
     </div>
   )
 }
