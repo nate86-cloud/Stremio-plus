@@ -1,164 +1,383 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Stremio + — v1.0.0 • Black glass. Plus sign.</title>
-  <meta name="description" content="Stremio + — custom desktop build of Stremio with bundled streaming server, Supabase sync, Sentry and auto-updates. For macOS, Windows, Linux." />
-  <link rel="icon" href="./icon.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root { --accent:#8B5CF6; --bg:#07070b; --glass:rgba(255,255,255,0.06); --border:rgba(255,255,255,0.08); --text:#fff; --muted:rgba(255,255,255,0.55); }
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-system,sans-serif;background:radial-gradient(1200px 600px at 20% 0%, rgba(139,92,246,0.18), transparent 60%),radial-gradient(900px 500px at 90% 90%, rgba(56,189,248,0.12), transparent 60%), #07070b;color:#fff;line-height:1.5}
-    a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
-    .wrap{max-width:1120px;margin:0 auto;padding:24px 20px 60px}
-    .nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:12px 0;margin-bottom:20px;backdrop-filter:blur(16px);background:rgba(7,7,11,0.6);border-bottom:1px solid var(--border)}
-    .nav-left{display:flex;align-items:center;gap:10px}
-    .nav-left img{width:32px;height:32px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.3)}
-    .nav-left b{font-family:Space Grotesk,sans-serif;letter-spacing:-0.02em}
-    .badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:6px 10px;border-radius:999px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.22);color:#c4b5fd}
-    .hero{position:relative;overflow:hidden;background:linear-gradient(145deg, rgba(139,92,246,0.14), rgba(10,132,255,0.08));border:1px solid var(--border);backdrop-filter:blur(20px);border-radius:36px;padding:0;display:grid;grid-template-columns:1.05fr 0.95fr}
-    .hero::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0.03;background:radial-gradient(circle at 1px 1px, #fff 1px, transparent 0);background-size:24px 24px}
-    .orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
-    .orb1{width:520px;height:520px;right:-160px;top:-160px;background:radial-gradient(circle at 30% 30%, #8B5CF6, transparent 60%);opacity:0.3}
-    .orb2{width:560px;height:560px;left:-200px;bottom:-200px;background:radial-gradient(circle at 70% 70%, #38BDF8, transparent 60%);opacity:0.2}
-    .hero-left{position:relative;padding:36px 40px}
-    .hero-right{position:relative;padding:32px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.08)}
-    .mock{width:100%;max-width:520px;border-radius:22px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.45),0 12px 24px rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.1);background:#0a0a0f}
-    .mock-bar{height:36px;display:flex;align-items:center;gap:6px;padding:0 14px;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.06)}
-    .dot{width:12px;height:12px;border-radius:50%}
-    .btn{	display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:999px;font-weight:600;font-size:14px;border:1px solid transparent;text-decoration:none}
-    .btn-primary{background:var(--accent);color:#fff;box-shadow:0 8px 24px rgba(139,92,246,0.35)}
-    .btn-ghost{background:rgba(255,255,255,0.06);border-color:var(--border);color:#fff}
-    .btn-ghost:hover{background:rgba(255,255,255,0.1)}
-    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:24px}
-    .card{grid-column:span 12;background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(20px);border-radius:22px;padding:22px}
-    @media(min-width:700px){ .card.span7{grid-column:span 7} .card.span5{grid-column:span 5} .card.span4{grid-column:span 4} }
-    .card h3{margin:12px 0 6px;font-family:Space Grotesk,sans-serif;font-size:15px}
-    .card p{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
-    .icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px}
-    .downloads{background:var(--glass);border:1px solid var(--border);border-radius:28px;padding:24px;margin-top:24px}
-    .dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:16px}
-    .dl{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:16px;padding:16px;transition:transform 0.15s}
-    .dl:hover{transform:translateY(-2px);border-color:rgba(139,92,246,0.2);background:rgba(139,92,246,0.06)}
-    .faq{margin-top:24px;background:var(--glass);border:1px solid var(--border);border-radius:22px;overflow:hidden}
-    .faq h3{padding:18px 24px;margin:0;font-size:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
-    .faq-item{border-bottom:1px solid var(--border)}
-    .faq-item:last-child{border:0}
-    .faq-q{width:100%;text-align:left;background:transparent;border:0;color:#fff;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:13px;font-weight:500}
-    .faq-a{padding:0 24px 16px;display:none}
-    .faq-item.open .faq-a{display:block}
-    .faq-item.open .faq-q{color:var(--accent)}
-    .mono{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:6px}
-    pre{background:rgba(0,0,0,0.35);padding:14px;border-radius:10px;overflow:auto;border:1px solid var(--border);font-size:12px}
-    footer{text-align:center;opacity:0.35;font-size:11px;margin-top:32px}
-    @media(max-width:900px){ .hero{grid-template-columns:1fr} .hero-right{padding-top:0} }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stremio + — The Stremio you love, now native.</title>
+<meta name="description" content="Stremio + — custom desktop build of Stremio. Bundled streaming server, Supabase sync, Sentry and auto-updates. For macOS, Windows, Linux. Black glass. Plus sign." />
+<link rel="icon" href="./icon.png" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#8B5CF6;
+    --accent-2:#38BDF8;
+    --bg:#F5F5F7;
+    --bg-soft:#FBFBFD;
+    --text:#1D1D1F;
+    --muted:#6E6E73;
+    --muted-2:#86868B;
+    --border:rgba(0,0,0,0.06);
+    --border-strong:rgba(0,0,0,0.08);
+    --glass:rgba(255,255,255,0.72);
+    --glass-strong:rgba(255,255,255,0.88);
+    --shadow:0 20px 60px rgba(0,0,0,0.08), 0 2px 12px rgba(0,0,0,0.06);
+    --shadow-lg:0 32px 80px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08);
+    --radius-xl:32px;
+    --radius-lg:20px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0A0A0F;
+      --bg-soft:#101014;
+      --text:#F5F5F7;
+      --muted:rgba(255,255,255,0.6);
+      --muted-2:rgba(255,255,255,0.45);
+      --border:rgba(255,255,255,0.08);
+      --border-strong:rgba(255,255,255,0.12);
+      --glass:rgba(255,255,255,0.06);
+      --glass-strong:rgba(255,255,255,0.10);
+      --shadow:0 20px 60px rgba(0,0,0,0.4), 0 2px 12px rgba(0,0,0,0.25);
+      --shadow-lg:0 32px 80px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:Inter, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  /* NAV — liquid glass, high refraction, minimal frost */
+  .nav{
+    position:sticky;top:12px;z-index:30;
+    margin:12px auto 0;max-width:1120px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 14px 10px 14px;
+    background: var(--glass);
+    backdrop-filter: blur(28px) saturate(180%) brightness(1.05);
+    -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(1.05);
+    border:1px solid var(--border);
+    border-radius:999px;
+    box-shadow: var(--shadow);
+  }
+  .nav::before{
+    content:"";position:absolute;inset:0;border-radius:999px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%);
+    opacity:0.18;pointer-events:none;
+  }
+  @media (prefers-color-scheme: dark){ .nav::before{opacity:0.08} }
+  .nav-left{display:flex;align-items:center;gap:10px;position:relative}
+  .nav-left img{width:32px;height:32px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.12)}
+  .nav-left b{font-family:Space Grotesk,sans-serif;letter-spacing:-0.02em;font-size:15px}
+  .nav-links{display:flex;gap:18px;font-size:13px;font-weight:500}
+  .nav-links a{color:var(--muted);text-decoration:none}
+  .nav-links a:hover{color:var(--text)}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:11px 18px;border-radius:999px;
+    font-weight:600;font-size:13px;line-height:1;
+    border:1px solid transparent;text-decoration:none;
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  }
+  .btn:hover{transform:translateY(-1px);text-decoration:none}
+  .btn-primary{
+    background: var(--accent);color:#fff;
+    box-shadow: 0 8px 24px rgba(139,92,246,0.28);
+    border-color: rgba(139,92,246,0.9);
+    position:relative;overflow:hidden;
+  }
+  .btn-primary::before{
+    content:"";position:absolute;inset:0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.22), transparent 55%);
+    pointer-events:none;
+  }
+  .btn-ghost{
+    background: var(--glass-strong);
+    border-color: var(--border-strong);
+    color: var(--text);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  }
+  @media (prefers-color-scheme: dark){ .btn-ghost{ box-shadow: 0 2px 12px rgba(0,0,0,0.25)} }
+  /* HERO — Apple-like, bigger type */
+  .hero{
+    margin-top:28px;
+    position:relative;overflow:hidden;
+    background: var(--glass);
+    backdrop-filter: blur(32px) saturate(180%) brightness(1.02);
+    -webkit-backdrop-filter: blur(32px) saturate(180%) brightness(1.02);
+    border:1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(700px 500px at 15% 0%, rgba(139,92,246,0.10), transparent 60%),
+      radial-gradient(800px 600px at 95% 95%, rgba(56,189,248,0.08), transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,0.45), transparent 38%);
+    opacity:0.55;pointer-events:none;
+  }
+  @media (prefers-color-scheme: dark){
+    .hero::before{
+      background:
+        radial-gradient(700px 500px at 15% 0%, rgba(139,92,246,0.14), transparent 60%),
+        radial-gradient(800px 600px at 95% 95%, rgba(56,189,248,0.10), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,0.06), transparent 42%);
+    }
+  }
+  .hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:0;position:relative}
+  .hero-left{padding:44px 44px 40px;position:relative}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:7px 12px;border-radius:999px;
+    background: var(--glass-strong);
+    border:1px solid var(--border);
+    backdrop-filter: blur(16px) saturate(160%);
+    font-size:12px;font-weight:500;letter-spacing:0.02em;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:#10B981;box-shadow:0 0 0 6px rgba(16,185,129,0.12);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.55}}
+  h1{
+    margin:18px 0 0;
+    font-family:Space Grotesk,sans-serif;
+    font-size:56px;line-height:0.9;letter-spacing:-0.04em;font-weight:700;
+  }
+  @media (max-width:900px){ h1{font-size:42px} .hero-grid{grid-template-columns:1fr} }
+  .sub{
+    font-size:13px;letter-spacing:0.18em;font-weight:700;
+    color:var(--muted-2);margin-top:10px;text-transform:uppercase;
+  }
+  .lead{
+    margin:18px 0 0;
+    font-size:17px;line-height:1.6;
+    color: var(--muted);max-width:560px;
+  }
+  .mono{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:11px;padding:4px 8px;border-radius:8px;
+    background: var(--glass-strong);border:1px solid var(--border);
+  }
+  .cta{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px}
+  .meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    padding:6px 10px;border-radius:999px;
+    background: var(--glass);border:1px solid var(--border);
+    backdrop-filter: blur(12px);font-size:11px;font-weight:500;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .chip.ok{background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.16);color:#0d7a5f}
+  @media (prefers-color-scheme: dark){ .chip.ok{color:#6EE7B7} }
+  /* MOCK */
+  .hero-right{position:relative;padding:32px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.02)}
+  @media (prefers-color-scheme: dark){ .hero-right{background:rgba(0,0,0,0.14)} }
+  .mock{
+    width:100%;max-width:520px;border-radius:22px;overflow:hidden;
+    background:#0A0A0F;border:1px solid rgba(255,255,255,0.10);
+    box-shadow:0 32px 80px rgba(0,0,0,0.22), 0 8px 24px rgba(0,0,0,0.12);
+  }
+  .mock-bar{height:36px;display:flex;align-items:center;gap:6px;padding:0 14px;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.06)}
+  .dot-r{width:12px;height:12px;border-radius:50%}
+  /* BENTO */
+  .section-title{margin:36px 0 14px;font-family:Space Grotesk,sans-serif;font-size:22px;letter-spacing:-0.02em}
+  .bento{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+  .card{grid-column:span 12;background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(20px) saturate(160%);border-radius:22px;padding:22px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.5), transparent 38%);opacity:0.14;pointer-events:none}
+  @media (prefers-color-scheme: dark){ .card::before{opacity:0.06} }
+  @media(min-width:700px){ .span7{grid-column:span 7} .span5{grid-column:span 5} .span4{grid-column:span 4} }
+  .card h3{margin:12px 0 6px;font-family:Space Grotesk,sans-serif;font-size:15px}
+  .card p{margin:0;font-size:13px;color:var(--muted);line-height:1.6}
+  .card-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid var(--border);background:var(--glass-strong)}
+  /* DOWNLOADS */
+  .panel{background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(24px) saturate(160%);border-radius:28px;padding:24px;box-shadow:var(--shadow);margin-top:28px;position:relative;overflow:hidden}
+  .panel::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.35), transparent 45%);opacity:0.10;pointer-events:none}
+  .dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:16px}
+  .dl{position:relative;background:var(--glass-strong);border:1px solid var(--border);border-radius:16px;padding:16px;transition:transform 0.15s, border-color 0.15s}
+  .dl:hover{transform:translateY(-2px);border-color:rgba(139,92,246,0.22)}
+  .dl.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .dl.active p{color:rgba(255,255,255,0.8)}
+  .cmd{position:relative;display:flex;align-items:center;gap:8px;margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,0.04);border:1px solid var(--border);font-family:ui-monospace,Menlo,monospace;font-size:11px;overflow:auto}
+  @media (prefers-color-scheme: dark){ .cmd{background:rgba(0,0,0,0.25)} }
+  .cmd button{
+    margin-left:auto;flex-shrink:0;
+    padding:6px 10px;border-radius:999px;
+    background: var(--glass-strong);border:1px solid var(--border);
+    backdrop-filter: blur(12px);font-size:11px;font-weight:600;cursor:pointer;
+  }
+  .cmd button:active{transform:scale(0.98)}
+  /* FAQ */
+  .faq{margin-top:28px;background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(20px);border-radius:22px;overflow:hidden;box-shadow:var(--shadow)}
+  .faq h3{padding:18px 24px;margin:0;font-size:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-family:Space Grotesk,sans-serif}
+  .faq-item{border-bottom:1px solid var(--border)}
+  .faq-item:last-child{border:0}
+  .faq-q{width:100%;text-align:left;background:transparent;border:0;color:var(--text);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:13px;font-weight:500}
+  .faq-a{padding:0 24px 16px;display:none}
+  .faq-item.open .faq-a{display:block}
+  footer{max-width:1120px;margin:36px auto 0;padding:0 24px;text-align:center;color:var(--muted-2);font-size:11px}
+</style>
 </head>
 <body>
   <div class="wrap">
     <nav class="nav">
-      <div class="nav-left"><img src="./icon.png" alt=""><b>Stremio <span style="color:var(--accent)">+</span></b> <span style="font-size:11px;padding:4px 8px;border-radius:999px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.2);color:#c4b5fd;margin-left:6px;">v1.0.0</span></div>
-      <div style="display:flex;gap:8px">
-        <a href="https://github.com/nate86-cloud/nate86-cloud" style="padding:8px 14px;border-radius:999px;background:rgba(255,255,255,0.06);border:1px solid var(--border);font-size:12px;">GitHub</a>
+      <div class="nav-left"><img src="./icon.png" alt="" width="32" height="32" style="border-radius:10px"><b>Stremio <span style="color:var(--accent)">+</span></b> <span style="font-size:11px;padding:4px 8px;border-radius:999px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.18);color:#7C3AED;margin-left:6px;">v1.0.0</span></div>
+      <div class="nav-links" style="display:flex;gap:10px;align-items:center">
+        <a href="#features">Features</a>
+        <a href="#download">Download</a>
+        <a href="#gatekeeper">Gatekeeper</a>
+        <a href="https://github.com/nate86-cloud/nate86-cloud" class="btn btn-ghost" style="padding:8px 14px;font-size:12px;">GitHub</a>
         <a href="https://github.com/nate86-cloud/nate86-cloud/releases/tag/v1.0.0" class="btn btn-primary" style="padding:8px 14px;font-size:12px;">Download</a>
       </div>
     </nav>
 
     <div class="hero">
-      <div class="orb orb1"></div>
-      <div class="orb orb2"></div>
-      <div class="hero-left">
-        <div class="badge"><span style="width:8px;height:8px;border-radius:50%;background:#10B981;display:inline-block;animation:pulse 1.5s infinite"></span> All platforms • Auto-updates • Custom icon</div>
-        <h1 style="margin:14px 0 0;font-family:Space Grotesk,sans-serif;font-size:48px;line-height:0.9;letter-spacing:-0.03em;">Stremio <span style="color:var(--accent)">+</span><span style="display:block;font-size:20px;font-weight:500;color:rgba(255,255,255,0.5);margin-top:8px;letter-spacing:0">Black glass. Plus sign. No Electron default.</span></h1>
-        <p style="margin:14px 0 0;opacity:0.65;line-height:1.6;max-width:560px;">The Stremio you love — now as a hardened desktop app. Bundled <span class="mono">127.0.0.1:11470</span> server, Supabase sync, Sentry and <b style="color:#fff">Stremio +</b> everywhere — Dock, Windows title bar, and installer.</p>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:22px">
-          <a href="https://github.com/nate86-cloud/nate86-cloud/releases/tag/v1.0.0" class="btn btn-primary">Download v1.0.0 →</a>
-          <a href="https://github.com/nate86-cloud/nate86-cloud" class="btn btn-ghost">View Source</a>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;font-size:11px;opacity:0.7">
-          <span style="padding:4px 8px;border-radius:999px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);color:#6EE7B7;">✓ Intel Mac</span>
-          <span style="padding:4px 8px;border-radius:999px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);color:#6EE7B7;">✓ Apple Silicon</span>
-          <span style="padding:4px 8px;border-radius:999px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);color:#6EE7B7;">✓ AppImage</span>
-          <span style="padding:4px 8px;border-radius:999px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);color:#6EE7B7;">✓ Windows exe</span>
-        </div>
-      </div>
-      <div class="hero-right">
-        <div class="mock">
-          <div class="mock-bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#28c940"></span><span style="margin-left:10px;font-size:11px;opacity:0.5;font-weight:500">Stremio +</span><span style="margin-left:auto;font-size:10px;padding:3px 7px;border-radius:999px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.2);color:#c4b5fd">v1.0.0</span></div>
-          <div style="padding:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-            <div style="grid-column:span 3;height:96px;border-radius:12px;background:linear-gradient(135deg, rgba(139,92,246,0.25), rgba(56,189,248,0.15));border:1px solid rgba(255,255,255,0.06);display:flex;align-items:flex-end;padding:10px;"><div><div style="font-size:11px;font-weight:600">Continue Watching</div><div style="font-size:10px;opacity:0.5">Bundled server • 127.0.0.1:11470</div></div></div>
-            <div style="height:64px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;opacity:0.3">🎬</div>
-            <div style="height:64px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;opacity:0.3">🎬</div>
-            <div style="height:64px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;opacity:0.3">🎬</div>
-            <div style="height:64px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;opacity:0.3">🎬</div>
-            <div style="height:64px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;opacity:0.3">🎬</div>
-            <div style="height:64px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;opacity:0.3">🎬</div>
+      <div style="position:absolute;right:-120px;top:-120px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #8B5CF6, transparent 60%);filter:blur(80px);opacity:0.18;pointer-events:none"></div>
+      <div style="position:absolute;left:-180px;bottom:-180px;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle at 70% 70%, #38BDF8, transparent 60%);filter:blur(100px);opacity:0.12;pointer-events:none"></div>
+      <div style="display:grid;grid-template-columns:1.05fr 0.95fr;gap:0;position:relative">
+        <div style="padding:44px 44px 40px">
+          <div class="eyebrow"><span class="dot"></span> All platforms • Auto-updates • Custom icon</div>
+          <h1>Stremio <span style="color:var(--accent)">+</span><span style="display:block;font-size:20px;font-weight:500;color:var(--muted);margin-top:8px;letter-spacing:0;font-family:Inter,sans-serif">Black glass. Plus sign. No Electron default.</span></h1>
+          <p class="lead">The Stremio you love — now as a hardened desktop app. Bundled <span class="mono">127.0.0.1:11470</span> server, Supabase sync, Sentry and <b style="color:var(--text)">Stremio +</b> everywhere — Dock, Windows title bar, and installer.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:24px">
+            <a href="https://github.com/nate86-cloud/nate86-cloud/releases/tag/v1.0.0" class="btn btn-primary">Download v1.0.0 →</a>
+            <a href="https://github.com/nate86-cloud/nate86-cloud" class="btn btn-ghost">View Source</a>
           </div>
-          <div style="padding:0 14px 14px;display:flex;gap:8px"><span style="flex:1;height:32px;border-radius:999px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;padding:0 12px;font-size:11px;opacity:0.4">Search…</span><span style="width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center">▶</span></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
+            <span class="chip ok">✓ Intel Mac</span>
+            <span class="chip ok">✓ Apple Silicon</span>
+            <span class="chip ok">✓ AppImage</span>
+            <span class="chip ok">✓ Windows exe</span>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="mock">
+            <div class="mock-bar"><span class="dot-r" style="background:#ff5f57"></span><span class="dot-r" style="background:#ffbd2e"></span><span class="dot-r" style="background:#28c940"></span><span style="margin-left:10px;font-size:11px;opacity:0.5;font-weight:500">Stremio +</span><span style="margin-left:auto;font-size:10px;padding:4px 8px;border-radius:999px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.2);color:#c4b5fd">v1.0.0</span></div>
+            <div style="padding:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+              <div style="grid-column:span 3;height:96px;border-radius:12px;background:linear-gradient(135deg, rgba(139,92,246,0.22), rgba(56,189,248,0.14));border:1px solid var(--border);display:flex;align-items:flex-end;padding:10px;"><div><div style="font-size:11px;font-weight:600;color:#fff">Continue Watching</div><div style="font-size:10px;opacity:0.55;color:#fff">Bundled server • 127.0.0.1:11470</div></div></div>
+              <div style="height:64px;border-radius:10px;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;opacity:0.5">🎬</div>
+              <div style="height:64px;border-radius:10px;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;opacity:0.5">🎬</div>
+              <div style="height:64px;border-radius:10px;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;opacity:0.5">🎬</div>
+              <div style="height:64px;border-radius:10px;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;opacity:0.5">🎬</div>
+              <div style="height:64px;border-radius:10px;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;opacity:0.5">🎬</div>
+              <div style="height:64px;border-radius:10px;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;opacity:0.5">🎬</div>
+            </div>
+            <div style="padding:0 14px 14px;display:flex;gap:8px"><span style="flex:1;height:32px;border-radius:999px;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;padding:0 12px;font-size:11px;opacity:0.5">Search…</span><span style="width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff">▶</span></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="grid">
+    <h2 id="features" class="section-title">Made for the glass era</h2>
+    <div class="bento">
       <div class="card span7">
-        <div class="icon" style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.18);color:#a78bfa">⚡</div>
+        <div class="card-icon" style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.18);color:#8B5CF6">⚡</div>
         <h3>Zero-config streaming</h3>
-        <p>Bundled <span class="mono">stremio-server/server.js</span> auto-starts. No separate install, no port juggling — just open and play.</p>
+        <p>Bundled <span class="mono">stremio-server/server.js</span> auto-starts via <span class="mono">launcher.cjs</span>. No separate install, no port juggling — just open and play.</p>
       </div>
       <div class="card span5">
-        <div class="icon" style="background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.18);color:#7dd3fc">☁️</div>
+        <div class="card-icon" style="background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.18);color:#0EA5E9">☁️</div>
         <h3>Supabase sync</h3>
         <p>Profiles, watch progress &amp; settings follow you — RLS per <span class="mono">auth.uid()</span>.</p>
       </div>
       <div class="card span4">
-        <div class="icon" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.18)">🔒</div>
+        <div class="card-icon" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.18)">🔒</div>
         <h3>Hardened Electron</h3>
         <p>contextIsolation • sandbox • CSP • safe IPC via contextBridge.</p>
       </div>
       <div class="card span4">
-        <div class="icon" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.18)">🛡️</div>
+        <div class="card-icon" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.18)">🛡️</div>
         <h3>Secure by default</h3>
         <p>External nav blocked, <span class="mono">file://</span> allow-list, permissions denied.</p>
       </div>
       <div class="card span4">
-        <div class="icon" style="background:rgba(236,72,153,0.12);border:1px solid rgba(236,72,153,0.18)">✨</div>
+        <div class="card-icon" style="background:rgba(236,72,153,0.12);border:1px solid rgba(236,72,153,0.18)">✨</div>
         <h3>Polished</h3>
         <p>Asar, obfuscated, no sourcemaps. Dock shows <b>Stremio +</b>, not Electron.</p>
       </div>
     </div>
 
-    <div class="downloads">
-      <h2 style="margin:0;font-family:Space Grotesk,sans-serif;display:flex;align-items:center;gap:8px">⬇ Download v1.0.0</h2>
-      <p style="margin:6px 0 0;opacity:0.5;font-size:12px">All 3 OS installers carry the new Stremio + icon. Auto-updates via GitHub Releases.</p>
-      <div class="dl-grid">
-        <a href="https://github.com/nate86-cloud/nate86-cloud/releases/tag/v1.0.0" class="dl"><div style="font-weight:700;font-size:13px">macOS</div><div style="opacity:0.5;font-size:11px;margin:4px 0 8px">Stremio-Plus-1.0.0-x64.dmg (Intel) + arm64</div><span style="font-size:12px;font-weight:600;color:var(--accent)">GitHub Releases →</span></a>
-        <a href="https://github.com/nate86-cloud/nate86-cloud/releases/tag/v1.0.0" class="dl"><div style="font-weight:700;font-size:13px">Linux</div><div style="opacity:0.5;font-size:11px;margin:4px 0 8px">Stremio-Plus-1.0.0.AppImage</div><span style="font-size:12px;font-weight:600;color:var(--accent)">GitHub Releases →</span></a>
-        <a href="https://github.com/nate86-cloud/nate86-cloud/releases/tag/v1.0.0" class="dl"><div style="font-weight:700;font-size:13px">Windows</div><div style="opacity:0.5;font-size:11px;margin:4px 0 8px">Stremio-Plus-Setup-1.0.0.exe</div><span style="font-size:12px;font-weight:600;color:var(--accent)">GitHub Releases →</span></a>
+    <div id="download" class="panel">
+      <div style="display:flex;flex-wrap:wrap;align-items:start;justify-content:space-between;gap:12px">
+        <div>
+          <h2 style="margin:0;font-family:Space Grotesk,sans-serif;display:flex;align-items:center;gap:8px;font-size:18px">⬇ Download v1.0.0</h2>
+          <p style="margin:6px 0 0;opacity:0.55;font-size:12px">All 3 OS installers carry the new Stremio + icon. Auto-updates via GitHub Releases.</p>
+        </div>
+        <span style="padding:6px 10px;border-radius:999px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.16);color:#0d7a5f;font-size:12px;display:inline-flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:#10B981;display:inline-block"></span> Live on GitHub</span>
       </div>
+
+      <div class="dl-grid">
+        <div class="dl" id="dl-mac">
+          <div style="font-weight:700;font-size:13px">macOS</div>
+          <div style="opacity:0.55;font-size:11px;margin:4px 0 8px">Stremio-Plus-1.0.0-x64.dmg (Intel) + arm64</div>
+          <div class="cmd"><code id="cmd-mac">curl -L -o Stremio-Plus-1.0.0-x64.dmg https://github.com/nate86-cloud/nate86-cloud/releases/download/v1.0.0/Stremio-Plus-1.0.0-x64.dmg</code><button onclick="copyCmd('cmd-mac', this)">Copy</button></div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <a href="https://github.com/nate86-cloud/nate86-cloud/releases/tag/v1.0.0" style="font-size:12px;font-weight:600">Releases →</a>
+            <span style="font-size:11px;opacity:0.5">or arm64 dmg</span>
+          </div>
+        </div>
+        <div class="dl" id="dl-linux">
+          <div style="font-weight:700;font-size:13px">Linux</div>
+          <div style="opacity:0.55;font-size:11px;margin:4px 0 8px">Stremio-Plus-1.0.0.AppImage</div>
+          <div class="cmd"><code id="cmd-linux">curl -L -o Stremio-Plus-1.0.0.AppImage https://github.com/nate86-cloud/nate86-cloud/releases/download/v1.0.0/Stremio-Plus-1.0.0.AppImage && chmod +x Stremio-Plus-1.0.0.AppImage</code><button onclick="copyCmd('cmd-linux', this)">Copy</button></div>
+          <a href="https://github.com/nate86-cloud/nate86-cloud/releases/tag/v1.0.0" style="font-size:12px;font-weight:600;display:inline-block;margin-top:8px">Releases →</a>
+        </div>
+        <div class="dl" id="dl-win">
+          <div style="font-weight:700;font-size:13px">Windows</div>
+          <div style="opacity:0.55;font-size:11px;margin:4px 0 8px">Stremio-Plus-Setup-1.0.0.exe</div>
+          <div class="cmd"><code id="cmd-win">Invoke-WebRequest -Uri https://github.com/nate86-cloud/nate86-cloud/releases/download/v1.0.0/Stremio-Plus-Setup-1.0.0.exe -OutFile Stremio-Plus-Setup-1.0.0.exe</code><button onclick="copyCmd('cmd-win', this)">Copy</button></div>
+          <a href="https://github.com/nate86-cloud/nate86-cloud/releases/tag/v1.0.0" style="font-size:12px;font-weight:600;display:inline-block;margin-top:8px">Releases →</a>
+        </div>
+      </div>
+      <p style="margin:12px 0 0;font-size:11px;opacity:0.5">In-app: open <span class="mono">Info</span> (ⓘ) → Landing Page for the same guide live.</p>
     </div>
 
-    <div class="faq">
+    <div id="gatekeeper" class="faq">
       <h3>🛡️ Bypass Gatekeeper (unsigned) — first launch only</h3>
       <div class="faq-item">
         <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">macOS — Stremio-Plus-1.0.0-x64.dmg → /Applications/Stremio Plus.app <span>⌄</span></button>
-        <div class="faq-a"><pre><code>xattr -cr "/Applications/Stremio Plus.app"
-# or
-sudo xattr -rd com.apple.quarantine "/Applications/Stremio Plus.app"</code></pre><p style="font-size:12px;opacity:0.5">Or right-click → Open → Open, or System Settings → Privacy & Security → Open Anyway.</p></div>
+        <div class="faq-a">
+          <div class="cmd"><code id="cmd-mac-gate">xattr -cr "/Applications/Stremio Plus.app" && open "/Applications/Stremio Plus.app"</code><button onclick="copyCmd('cmd-mac-gate', this)">Copy</button></div>
+          <p style="font-size:12px;opacity:0.5;margin-top:8px">Or right-click → Open → Open, or System Settings → Privacy &amp; Security → Open Anyway.</p>
+        </div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Linux — AppImage <span>⌄</span></button>
-        <div class="faq-a"><pre><code>chmod +x "Stremio-Plus-1.0.0.AppImage"
-./"Stremio-Plus-1.0.0.AppImage"</code></pre></div>
+        <div class="faq-a"><div class="cmd"><code id="cmd-linux-gate">chmod +x "Stremio-Plus-1.0.0.AppImage" && ./"Stremio-Plus-1.0.0.AppImage"</code><button onclick="copyCmd('cmd-linux-gate', this)">Copy</button></div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Windows — exe <span>⌄</span></button>
-        <div class="faq-a"><p style="font-size:12px;opacity:0.6">SmartScreen → More info → Run anyway.</p></div>
+        <div class="faq-a"><div class="cmd"><code id="cmd-win-gate">.\Stremio-Plus-Setup-1.0.0.exe</code><button onclick="copyCmd('cmd-win-gate', this)">Copy</button></div><p style="font-size:12px;opacity:0.5;margin-top:8px">SmartScreen → More info → Run anyway.</p></div>
       </div>
     </div>
 
-    <footer>Stremio + • <a href="https://github.com/nate86-cloud/nate86-cloud">nate86-cloud/nate86-cloud</a> • v1.0.0 • In-app: Info → Landing Page</footer>
+    <footer>Stremio + • <a href="https://github.com/nate86-cloud/nate86-cloud">nate86-cloud/nate86-cloud</a> • v1.0.0 • In-app: Info → Landing</footer>
   </div>
-  <style>@keyframes pulse{0%,100%{opacity:0.8}50%{opacity:0.4}}</style>
+
+  <script>
+    function copyCmd(id, btn){
+      const el = document.getElementById(id);
+      const text = el.innerText;
+      navigator.clipboard.writeText(text).then(()=>{
+        const old = btn.innerText;
+        btn.innerText = 'Copied!';
+        setTimeout(()=> btn.innerText = old, 1200);
+      });
+    }
+    // highlight user's OS
+    (function(){
+      const ua = navigator.userAgent.toLowerCase();
+      let os = 'linux';
+      if(ua.includes('mac')) os='mac';
+      else if(ua.includes('win')) os='win';
+      const el = document.getElementById('dl-'+os);
+      if(el){ el.style.borderColor='rgba(139,92,246,0.35)'; el.style.boxShadow='0 8px 24px rgba(139,92,246,0.12)'; }
+    })();
+  </script>
 </body>
 </html>
