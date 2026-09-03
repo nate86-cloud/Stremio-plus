@@ -1,26 +1,10 @@
 # Stremio + — v1.0.0
 
-Custom desktop build of Stremio (Electron + Vite + React). Bundles the local streaming server at `127.0.0.1:11470`, Supabase cloud sync, Sentry, and auto-updates. Unsigned for now — see **Bypass Gatekeeper Warnings** below.
+Better live streaming support
+Redesigned ui
+Added user profiles
+Audio normalisation
 
-## Requirements
-- Node 20+, npm 10+
-- `npm install`
-
-## Packaging (electron-builder → `release/`)
-`package.json:build` → `asar: true` (with `stremio-server/**` unpacked), sourcemaps disabled, JS obfuscated. `version: 1.0.0`.
-
-| Command | Output (actual) | When |
-|---------|--------|------|
-| `npm run dist` | builds for **current** OS only | fastest on your machine |
-| `npm run dist:mac` | `release/Stremio-Plus-1.0.0-x64.dmg` + `Stremio-Plus-1.0.0-x64.zip` | run **on macOS** |
-| `npm run dist:linux` | `release/Stremio-Plus-1.0.0.AppImage` | run **on Linux** |
-| `npm run dist:win` | `release/Stremio-Plus-Setup-1.0.0.exe` + `Stremio-Plus-Setup-1.0.0.zip` | run **on Windows** (or with Wine on mac) |
-
-*Why `Stremio-Plus` not `Stremio +` in filenames:* `+` is not allowed in Linux `productFilename` (`AppImage`/`deb`); productName is `Stremio Plus` (package.json) while the in-app Titlebar still shows **Stremio +** (with `+` sign). The `.app`/`.exe` display name is **Stremio Plus**.
-
-All artifacts land in `release/`. Update `productName` and `appId: com.stremio.custom` in `package.json:build` if you rename.
-
-> Cross-building (e.g. `.dmg` on Linux) requires Docker/wine and is not reliable — build each installer on its native OS.
 
 ## Bypass Gatekeeper Warnings (app is unsigned)
 
