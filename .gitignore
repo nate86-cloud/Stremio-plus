@@ -9,6 +9,8 @@ lerna-debug.log*
 
 node_modules
 dist
+!landing page/dist
+!landing page/dist/**
 dist-ssr
 release
 *.local

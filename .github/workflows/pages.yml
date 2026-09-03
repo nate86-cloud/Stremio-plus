@@ -5,7 +5,6 @@ on:
     branches: [main]
     paths:
       - "landing page/**"
-      - "docs/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -36,59 +35,46 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      # Try to build landing page via Vite (TanStack Start). If build succeeds, it may output to .output/public or dist.
-      # Fallback to existing prebuilt dist if build doesn't produce html.
-      - name: Build landing page
+      - name: Build landing page (optional — committed dist is already patched for Pages)
         working-directory: landing page
         run: |
           if [ -f package-lock.json ]; then npm ci; else npm install; fi
-          npm run build || echo "build finished with non-zero, continuing to deploy existing dist"
+          # Build for local verification; committed dist is used if build output differs (Cloudflare SSR vs static)
+          npm run build || echo "build finished with non-zero, continuing to deploy committed dist"
+          echo "Build done. Checking outputs:"
+          ls -la dist || true
+          ls -la .output/public || true
 
-      - name: Prepare Pages artifact (patch base for project pages)
+      - name: Prepare Pages artifact (only landing page/dist, no docs fallback)
         run: |
           set -e
-          echo "Checking for landing page outputs..."
-          ls -la "landing page/dist" || true
-          ls -la "landing page/.output/public" || true
-          # If .output/public contains fresh build html, prefer it; else use dist
           SRC="landing page/dist"
-          if [ -f "landing page/.output/public/index.html" ]; then
-            echo "Found .output/public with index.html, using it + merging dist assets"
-            SRC="landing page/.output/public"
-            # Ensure dist exists for fallback
-            mkdir -p "landing page/dist"
-            cp -R "$SRC"/* "landing page/dist/" 2>/dev/null || true
-            SRC="landing page/dist"
-          fi
           if [ ! -f "$SRC/index.html" ]; then
-            echo "ERROR: No index.html found in $SRC nor .output/public – will deploy docs as fallback"
-            SRC="docs"
+            echo "ERROR: landing page/dist/index.html not found — Pages must be served from landing page folder only."
+            echo "Checked:"
+            ls -la "landing page/dist" || true
+            ls -la "landing page/.output/public" || true
+            exit 1
           fi
-          echo "Using source: $SRC"
+          echo "Using source: $SRC (landing page only)"
           ls -la "$SRC" | head -n 30
-          # Patch absolute "/assets" to relative "./assets" for project pages subpath
+          # Ensure relative base for GitHub Pages project site (already patched in committed dist, but re-apply for fresh builds)
           if [ -f "$SRC/index.html" ]; then
-            echo "Patching $SRC/index.html for relative base..."
-            # root index
+            echo "Ensuring relative base for $SRC/index.html..."
             sed -i 's|href="/assets/|href="./assets/|g' "$SRC/index.html" || true
             sed -i 's|src="/assets/|src="./assets/|g' "$SRC/index.html" || true
             sed -i 's|href="/favicon.png"|href="./favicon.png"|g' "$SRC/index.html" || true
             sed -i 's|href="/terms"|href="./terms/"|g' "$SRC/index.html" || true
-            # generic /assets fallback (covers preload)
             sed -i 's|"/assets/|"./assets/|g' "$SRC/index.html" || true
-            # ensure not double-patched to ././
             sed -i 's|\./\./assets|./assets|g' "$SRC/index.html" || true
             sed -i 's|\.\./assets|./assets|g' "$SRC/index.html" || true
-            # patch 404 similarly
             if [ -f "$SRC/404.html" ]; then
               sed -i 's|href="/assets/|href="./assets/|g' "$SRC/404.html" || true
               sed -i 's|src="/assets/|src="./assets/|g' "$SRC/404.html" || true
               sed -i 's|href="/favicon.png"|href="./favicon.png"|g' "$SRC/404.html" || true
               sed -i 's|"/assets/|"./assets/|g' "$SRC/404.html" || true
             fi
-            # patch terms subpage if exists (uses ../assets)
             if [ -f "$SRC/terms/index.html" ]; then
-              # terms already correct with ../assets if built with relative, but ensure
               echo "Patching terms subpage..."
               sed -i 's|href="/assets/|href="../assets/|g' "$SRC/terms/index.html" || true
               sed -i 's|src="/assets/|src="../assets/|g' "$SRC/terms/index.html" || true
@@ -96,11 +82,9 @@ jobs:
               sed -i 's|"/assets/|"../assets/|g' "$SRC/terms/index.html" || true
             fi
           fi
-          # Ensure .nojekyll exists (prevents Jekyll processing of _headers etc)
           touch "$SRC/.nojekyll"
-          echo "Final Pages artifact contents:"
+          echo "Final Pages artifact (landing page/dist only):"
           ls -la "$SRC" | head -n 50
-          # stage for upload-pages-artifact
           mkdir -p /tmp/pages_artifact
           cp -R "$SRC"/* /tmp/pages_artifact/ 2>/dev/null || true
           cp -R "$SRC"/.* /tmp/pages_artifact/ 2>/dev/null || true

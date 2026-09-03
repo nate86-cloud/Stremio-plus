@@ -8,8 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
-dist-ssr
+# dist is intentionally tracked for GitHub Pages (landing page/dist) — do not ignore
 .output
 .vinxi
 .tanstack/**
