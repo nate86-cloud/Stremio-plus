@@ -1,16 +1,16 @@
 {
-  "name": "stremio-custom",
+  "name": "stremio-plus",
   "private": true,
   "version": "1.0.0",
   "description": "Stremio+ — custom desktop build with Supabase cloud sync, Sentry, and auto-updates",
   "author": {
-    "name": "Stremio Custom",
+    "name": "Stremio Plus",
     "email": "support@stremio.example.com"
   },
-  "homepage": "https://github.com/nate86-cloud/nate86-cloud",
+  "homepage": "https://github.com/nate86-cloud/Stremio-plus",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nate86-cloud/nate86-cloud.git"
+    "url": "https://github.com/nate86-cloud/Stremio-plus.git"
   },
   "type": "module",
   "main": "electron.js",
@@ -27,7 +27,7 @@
     "dist:linux": "vite build && electron-builder --linux"
   },
   "build": {
-    "appId": "com.stremio.custom",
+    "appId": "com.stremio.plus",
     "productName": "Stremio Plus",
     "artifactName": "Stremio-Plus-${version}-${arch}.${ext}",
     "asar": true,
@@ -50,7 +50,7 @@
       {
         "provider": "github",
         "owner": "nate86-cloud",
-        "repo": "nate86-cloud"
+        "repo": "Stremio-plus"
       }
     ],
     "mac": {

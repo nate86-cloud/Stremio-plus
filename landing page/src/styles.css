@@ -1,0 +1,218 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Stremio Plus — Liquid Glass design system.
+ * Tinted deep neutrals, no pure black, geometric sans + editorial serif.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 3px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+  --radius-2xl: calc(var(--radius) + 12px);
+  --radius-3xl: calc(var(--radius) + 20px);
+  --radius-4xl: calc(var(--radius) + 32px);
+
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-glass: var(--glass);
+  --color-glass-edge: var(--glass-edge);
+  --color-violet: var(--violet);
+  --color-teal: var(--teal);
+}
+
+:root {
+  --radius: 1.25rem;
+
+  --background: oklch(0.975 0.004 280);
+  --foreground: oklch(0.19 0.015 285);
+  --card: oklch(0.99 0.003 280);
+  --card-foreground: oklch(0.19 0.015 285);
+  --popover: oklch(0.99 0.003 280);
+  --popover-foreground: oklch(0.19 0.015 285);
+  --primary: oklch(0.45 0.19 285);
+  --primary-foreground: oklch(0.985 0.005 280);
+  --secondary: oklch(0.94 0.006 280);
+  --secondary-foreground: oklch(0.24 0.015 285);
+  --muted: oklch(0.94 0.006 280);
+  --muted-foreground: oklch(0.5 0.014 285);
+  --accent: oklch(0.62 0.11 210);
+  --accent-foreground: oklch(0.15 0.015 285);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0.005 280);
+  --border: oklch(0.24 0.02 285 / 12%);
+  --input: oklch(0.24 0.02 285 / 14%);
+  --ring: oklch(0.45 0.19 285 / 45%);
+
+  --violet: oklch(0.52 0.21 285);
+  --teal: oklch(0.62 0.1 205);
+
+  /* liquid glass: prism — light passes through, refraction saturates what's behind.
+     Low fill, minimal frost, high saturation, chromatic edge dispersion. */
+  --glass: oklch(1 0 0 / 12%);
+  --glass-edge: oklch(1 0 0 / 96%);
+  --glass-blur: 1px;
+  --glass-saturate: 360%;
+  --glass-shadow:
+    inset 0 1px 0 0 var(--glass-edge), inset 0 -1px 0 0 oklch(1 0 0 / 24%),
+    inset 1px 0 0 0 oklch(0.78 0.13 45 / 26%), inset -1px 0 0 0 oklch(0.62 0.17 255 / 26%),
+    0 1px 2px -1px oklch(0.2 0.02 285 / 14%), 0 10px 24px -14px oklch(0.2 0.02 285 / 18%);
+  --glass-shadow-hover:
+    inset 0 1px 0 0 oklch(1 0 0 / 98%), inset 0 -1px 0 0 oklch(1 0 0 / 32%),
+    inset 1px 0 0 0 oklch(0.78 0.13 45 / 36%), inset -1px 0 0 0 oklch(0.62 0.17 255 / 36%),
+    0 2px 4px -1px oklch(0.2 0.02 285 / 16%), 0 18px 36px -16px oklch(0.2 0.02 285 / 22%);
+  --glass-sheen: linear-gradient(
+    150deg,
+    oklch(1 0 0 / 22%) 0%,
+    oklch(1 0 0 / 2%) 28%,
+    oklch(1 0 0 / 0%) 60%,
+    oklch(1 0 0 / 7%) 100%
+  );
+
+}
+
+.dark {
+  --background: oklch(0.145 0.012 285);
+  --foreground: oklch(0.965 0.004 280);
+  --card: oklch(0.185 0.014 285);
+  --card-foreground: oklch(0.965 0.004 280);
+  --popover: oklch(0.185 0.014 285);
+  --popover-foreground: oklch(0.965 0.004 280);
+  --primary: oklch(0.62 0.2 285);
+  --primary-foreground: oklch(0.985 0.005 280);
+  --secondary: oklch(0.24 0.016 285);
+  --secondary-foreground: oklch(0.965 0.004 280);
+  --muted: oklch(0.24 0.016 285);
+  --muted-foreground: oklch(0.68 0.012 285);
+  --accent: oklch(0.72 0.1 200);
+  --accent-foreground: oklch(0.16 0.014 285);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.7 0.16 285 / 55%);
+
+  --violet: oklch(0.62 0.21 288);
+  --teal: oklch(0.72 0.1 200);
+
+  --glass: oklch(1 0 0 / 3%);
+  --glass-edge: oklch(1 0 0 / 50%);
+  --glass-blur: 1px;
+  --glass-saturate: 340%;
+  --glass-shadow:
+    inset 0 1px 0 0 var(--glass-edge), inset 0 -1px 0 0 oklch(1 0 0 / 8%),
+    inset 1px 0 0 0 oklch(0.7 0.16 250 / 18%), inset -1px 0 0 0 oklch(0.72 0.12 45 / 18%),
+    0 1px 2px -1px oklch(0 0 0 / 55%), 0 14px 34px -20px oklch(0 0 0 / 70%);
+  --glass-shadow-hover:
+    inset 0 1px 0 0 oklch(1 0 0 / 64%), inset 0 -1px 0 0 oklch(1 0 0 / 14%),
+    inset 1px 0 0 0 oklch(0.7 0.16 250 / 26%), inset -1px 0 0 0 oklch(0.72 0.12 45 / 26%),
+    0 2px 6px -1px oklch(0 0 0 / 55%), 0 22px 46px -22px oklch(0 0 0 / 75%);
+  --glass-sheen: linear-gradient(
+    150deg,
+    oklch(1 0 0 / 9%) 0%,
+    oklch(1 0 0 / 1%) 28%,
+    oklch(1 0 0 / 0%) 60%,
+    oklch(1 0 0 / 4%) 100%
+  );
+
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01" 1;
+  }
+
+  ::selection {
+    background-color: var(--violet);
+    color: oklch(0.98 0 0);
+  }
+}
+
+/* Refractive glass surface: light passes through; backdrop is saturated and
+   chromatically dispersed at the edges like a prism. Minimal frost. */
+@utility glass {
+  position: relative;
+  background-color: var(--glass);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(1.08)
+    brightness(1.04);
+
+  box-shadow: var(--glass-shadow);
+  isolation: isolate;
+
+  /* Specular top-edge highlight + refracted dispersion (warm/cool split). */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--glass-sheen);
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
+@utility glass-hover {
+  transition:
+    transform 140ms cubic-bezier(0.2, 0.8, 0.3, 1),
+    box-shadow 140ms cubic-bezier(0.2, 0.8, 0.3, 1),
+    opacity 140ms linear;
+
+  &:hover {
+    transform: translateY(-1px) scale(1.012);
+    box-shadow: var(--glass-shadow-hover);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.985);
+  }
+}
+
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility text-balance-tight {
+  text-wrap: balance;
+}
