@@ -1,8 +1,14 @@
 # Stremio + — v1.0.0
 
 Better live streaming support
+
+
 Redesigned ui
+
+
 Added user profiles
+
+
 Audio normalisation
 
 
@@ -47,3 +53,7 @@ If running as root or in a container you may need `./...AppImage --no-sandbox`. 
 4. Portable `.zip` (in `release/`): extract anywhere → run `Stremio Plus.exe` — same SmartScreen dialog applies.
 
 > After the first whitelisting, later launches and auto-updates (electron-updater, checks GitHub Releases every 6h) will not re-trigger the warning.
+
+
+
+incremental updates for improvement and bug fixes will be released soon...
